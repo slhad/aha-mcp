@@ -1,0 +1,111 @@
+import { z } from "zod";
+import { HassStatusJsonSchema, HassStatusSchema, ValidateConfigSchema } from "../hass/types";
+import { stripSchemaKey } from "../helpers";
+import { BaseMcp } from "./baseMcp";
+
+export class ConfigMcp extends BaseMcp {
+
+    register() {
+        this.registerResourceOrTool(
+            "get-status",
+            "config://status",
+            {
+                title: "Get Home Assistant connection status",
+                description: "Get Home Assistant connection status",
+                inputSchema: {},
+                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(HassStatusJsonSchema)),
+                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : HassStatusSchema
+            },
+            async () => {
+                await this.ensureConnection();
+                const states = await this.client!.getStates();
+                return {
+                    contents: [
+                        {
+                            uri: "config://status",
+                            text: JSON.stringify({
+                                connected: true,
+                                entityCount: states.length,
+                            }),
+                            mimeType: "application/json",
+                            _meta: {},
+                        },
+                    ],
+                };
+            }
+        );
+
+        this.server.registerTool(
+            "validate-config",
+            {
+                title: "Validate triggers, conditions and actions",
+                description: "Validate triggers, conditions and actions configurations as if part of an automation.",
+                inputSchema: { config: this.options.NO_LONG_INPUT_TYPES ? z.object({}).passthrough() : ValidateConfigSchema.passthrough() },
+            },
+            async ({ config }) => {
+                await this.ensureConnection();
+                try {
+                    const result = await this.client!.validateConfig(config);
+                    return { content: [{ type: "text", text: JSON.stringify(result), _meta: {} }] };
+                } catch (err: unknown) {
+                    return {
+                        content: [{
+                            type: "text",
+                            text: `Config validation failed: ${err instanceof Error ? err.message : "Unknown error"}\n${err instanceof Error ? err.stack : ""}`,
+                            _meta: { error: true }
+                        }]
+                    };
+                }
+            }
+        );
+
+        this.server.registerTool(
+            "call-service",
+            {
+                title: "Call a Home Assistant service",
+                description: "Call a Home Assistant service",
+                inputSchema: {
+                    domain: z.string().describe("Service domain (e.g., light, switch)"),
+                    service: z.string().describe("Service name"),
+                    data: z.record(z.string(), z.unknown()).optional(),
+                },
+            },
+            async (args: Record<string, unknown>) => {
+                await this.ensureConnection();
+                const domain = args.domain as string;
+                const service = args.service as string;
+                const data = args.data as Record<string, unknown> | undefined;
+                await this.client!.callService(domain, service, data);
+                return {
+                    content: [{ type: "text", text: JSON.stringify({ success: true }), _meta: {} }],
+                };
+            }
+        );
+
+        this.registerResourceOrTool(
+            "get-manifest",
+            "config://manifest/{integration}",
+            {
+                title: "Get Home Assistant integration manifest",
+                description: "Get the manifest of a Home Assistant integration",
+                inputSchema: { integration: z.string().describe("Integration name, e.g. 'light'") },
+                mimeType: "application/json",
+                outputSchema: undefined
+            },
+            async (uri: URL, { integration }) => {
+                await this.ensureConnection();
+                const manifest = await this.client!.getManifest(integration as string);
+                return {
+                    contents: [
+                        {
+                            uri: uri.toString(),
+                            text: JSON.stringify(manifest),
+                            mimeType: "application/json",
+                            _meta: {},
+                        }
+                    ]
+                };
+            }
+        );
+    }
+}

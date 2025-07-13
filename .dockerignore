@@ -1,0 +1,11 @@
+.history
+node_modules/
+tests/
+.git/
+.env
+.DS_Store
+coverage/
+*.log
+.vscode/
+.kilocode/
+tests/hass-real-config.ts

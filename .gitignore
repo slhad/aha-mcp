@@ -1,0 +1,10 @@
+.history
+node_modules/
+dist/
+.env
+.DS_Store
+*.log
+coverage/
+*.tsbuildinfo
+.vscode/
+tests/hass-real-config.ts

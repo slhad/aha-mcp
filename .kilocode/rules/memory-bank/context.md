@@ -1,0 +1,6 @@
+# Context
+
+Current focus: Modular MCP tool registration, automation management, Docker deployment, test coverage, code formatting, and MCP tool documentation.
+Recent changes: Added [`src/server/automationMcp.ts`](src/server/automationMcp.ts:1) for dedicated automation MCP tool registration (CRUD, trace, device triggers). MCP server class refactored ([`src/server/homeAssistantMcpServer.ts`](src/server/homeAssistantMcpServer.ts:1)), Dockerfile updated for Node.js 20 and build steps, minimal Vitest tests added for MCP server and Home Assistant client ([`tests/homeAssistantMcpServer.test.ts`](tests/homeAssistantMcpServer.test.ts:1), [`tests/hassClient.test.ts`](tests/hassClient.test.ts:1)), Prettier added for formatting, all TypeScript files formatted with double quotes and no trailing commas.
+Unit tests now support dual-mode: mock and real Home Assistant instance. Test mode is determined automatically: if [`tests/hass-real-config.ts`](tests/hass-real-config.ts:1) exists, tests use real credentials (file is ignored from git/docker); otherwise, tests run in mock mode. [`tests/hass-real-config.example.ts`](tests/hass-real-config.example.ts:1) provides a template for other builders.
+Next steps: Document new automation MCP tools, expand integration tests for automation MCP and Home Assistant client, verify Docker deployment in production.

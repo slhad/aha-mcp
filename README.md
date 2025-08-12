@@ -91,7 +91,7 @@ You can run the MCP server using the same command and argument structure as in y
     "HASS_URL=https://your-home-assistant.local:8123",
     "-e",
     "HASS_ACCESS_TOKEN=<your_token_here>",
-    "aha-mcp-test"
+    "ghcr.io/slhad/aha-mcp:0.0.1"
   ]
 }
 ```
@@ -104,7 +104,7 @@ Replace `<your_token_here>` with your actual Home Assistant access token.
 
 The following environment variables can be set to configure the MCP server:
 
-- `HASS_URL` (required): The URL of your Home Assistant instance. Example: `https://your-home-assistant.local:8123` (default in code: `ws://localhost:8123/api/websocket`)
+- `HASS_URL` (required): The URL of your Home Assistant instance. Example: `https://your-home-assistant.local:8123` (default in code: `ws://localhost:8123`)
 - `HASS_ACCESS_TOKEN` (required): Long-lived access token for Home Assistant. The server will not start without this.
 - `DEBUG`: Set to `true` to enable debug logging. Default: `false`.
 - `RESOURCES_TO_TOOLS`: Set to `true` to enable mapping resources to tools. Default: `false`.

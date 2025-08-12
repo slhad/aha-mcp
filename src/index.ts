@@ -2,7 +2,7 @@ import { HomeAssistantMCPServer } from "./server/homeAssistantMcpServer.js";
 import { HASSConfig } from "./hass/types.js";
 
 const config: HASSConfig = {
-    url: process.env.HASS_URL || "ws://localhost:8123/api/websocket",
+    url: process.env.HASS_URL || "ws://localhost:8123",
     accessToken: process.env.HASS_ACCESS_TOKEN || "",
     debugMode: process.env.DEBUG === "true",
     RESOURCES_TO_TOOLS: process.env.RESOURCES_TO_TOOLS === "true",

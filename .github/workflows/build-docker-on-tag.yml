@@ -37,3 +37,24 @@ jobs:
         run: |
           IMAGE_NAME=ghcr.io/${{ github.repository }}:$TAG
           docker push $IMAGE_NAME
+
+      - name: Install semver for tag comparison
+        run: npm install semver
+
+      - name: Check if tag is latest
+        id: is_latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TAG: ${{ env.TAG }}
+        run: |
+          node .github/workflows/is-latest-tag.js
+        continue-on-error: true
+
+      - name: Tag and push as latest if this is the highest version
+        if: steps.is_latest.outcome == 'success'
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository }}:$TAG
+          LATEST_IMAGE=ghcr.io/${{ github.repository }}:latest
+          docker tag $IMAGE_NAME $LATEST_IMAGE
+          docker push $LATEST_IMAGE

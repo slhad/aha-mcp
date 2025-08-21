@@ -6,8 +6,10 @@
     "type": "module",
     "scripts": {
         "start": "tsx .",
-        "docker": "podman build -t aha-mcp .",
+        "docker": "docker build -t aha-mcp .",
+        "podman": "podman build -t aha-mcp .",
         "predocker": "npm test",
+        "prepodman": "npm test",
         "preformat": "npm run check",
         "pretest": "npm run format",
         "test": "vitest run",
@@ -17,18 +19,18 @@
         "format": "eslint --fix ."
     },
     "dependencies": {
-        "@modelcontextprotocol/sdk": "^1.15.1",
+        "@modelcontextprotocol/sdk": "^1.17.3",
         "home-assistant-js-websocket": "^8.2.0",
         "zod-to-json-schema": "^3.24.6"
     },
     "devDependencies": {
         "@types/node": "^20.8.0",
-        "@typescript-eslint/eslint-plugin": "^6.7.0",
-        "@typescript-eslint/parser": "^6.7.0",
-        "eslint": "^8.57.0",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "@typescript-eslint/parser": "^6.21.0",
+        "eslint": "^8.57.1",
         "tsx": "^4.7.0",
         "typescript": "^5.2.2",
-        "vitest": "^1.2.0"
+        "vitest": "^3.2.4"
     },
     "engines": {
         "node": ">=18.0.0"

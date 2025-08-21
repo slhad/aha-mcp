@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-const https = require('https');
-const semver = require('semver');
+
+import https from 'https';
+import semver from 'semver';
+
 
 const repo = process.env.GITHUB_REPOSITORY;
 const currentTag = process.env.TAG;
 const token = process.env.GITHUB_TOKEN;
+
 
 function fetchTags(page = 1, tags = []) {
     return new Promise((resolve, reject) => {
@@ -16,7 +19,7 @@ function fetchTags(page = 1, tags = []) {
                 'Authorization': `token ${token}`
             }
         };
-        https.get(options, res => {
+        const req = https.get(options, res => {
             let data = '';
             res.on('data', chunk => data += chunk);
             res.on('end', () => {
@@ -27,9 +30,11 @@ function fetchTags(page = 1, tags = []) {
                     resolve(tags.concat(result));
                 }
             });
-        }).on('error', reject);
+        });
+        req.on('error', reject);
     });
 }
+
 
 (async () => {
     try {

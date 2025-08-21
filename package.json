@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx .",
-        "docker": "docker build -t aha-mcp .",
+        "docker": "podman build -t aha-mcp .",
         "predocker": "npm test",
         "preformat": "npm run check",
         "pretest": "npm run format",

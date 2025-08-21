@@ -55,7 +55,7 @@ This project aims to address these gaps by providing a reliable and fully functi
 
 You can run the MCP server using the same command and argument structure as in your `mcp_settings.json`.
 
-### 1. Run with Node.js (with tsx in global path)
+### 1. Run with Node.js (with tsx in global path) (most likely for development)
 
 ```jsonc
 {
@@ -91,7 +91,7 @@ You can run the MCP server using the same command and argument structure as in y
     "HASS_URL=https://your-home-assistant.local:8123",
     "-e",
     "HASS_ACCESS_TOKEN=<your_token_here>",
-    "ghcr.io/slhad/aha-mcp:0.0.1"
+    "ghcr.io/slhad/aha-mcp"
   ]
 }
 ```

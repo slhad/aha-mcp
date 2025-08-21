@@ -494,4 +494,18 @@ export class HASSClient {
         });
     }
 
+    async listAreas(): Promise<Record<string, unknown>[]> {
+        return await this.connection.sendMessagePromise({
+            type: "config/area_registry/list"
+        });
+    }
+
+    async searchRelatedEntities(item_type: string, item_id: string): Promise<object> {
+        return await this.connection.sendMessagePromise({
+            type: "search/related",
+            item_type,
+            item_id
+        });
+    }
+
 }

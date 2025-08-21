@@ -202,4 +202,12 @@ describe("HASSClient", () => {
         expect(configResult).toHaveProperty("views");
     });
 
+    it("should search related entities", async () => {
+        const client = await HASSClient.create(config);
+        const itemType = "area";
+        const itemId = "studio";
+        const relatedEntities = await client.searchRelatedEntities(itemType, itemId);
+        expect(relatedEntities).toBeDefined();
+    });
+
 });

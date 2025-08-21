@@ -2,6 +2,7 @@ import { z } from "zod";
 import { HassStatusJsonSchema, HassStatusSchema, ValidateConfigSchema } from "../hass/types";
 import { stripSchemaKey } from "../helpers";
 import { BaseMcp } from "./baseMcp";
+import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export class ConfigMcp extends BaseMcp {
 
@@ -84,7 +85,7 @@ export class ConfigMcp extends BaseMcp {
 
         this.registerResourceOrTool(
             "get-manifest",
-            "config://manifest/{integration}",
+            new ResourceTemplate("config://manifest/{integration}", { list: undefined }),
             {
                 title: "Get Home Assistant integration manifest",
                 description: "Get the manifest of a Home Assistant integration",

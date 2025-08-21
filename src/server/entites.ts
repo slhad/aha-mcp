@@ -72,7 +72,7 @@ export class Entities extends BaseMcp {
             new ResourceTemplate("entity://state/{entityId}", { list: undefined }),
             {
                 title: "Get state of a specific entity",
-                description: "Get state of a specific entity",
+                description: "Get state of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
                 outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : EntityStateSchema
@@ -100,7 +100,7 @@ export class Entities extends BaseMcp {
             new ResourceTemplate("entity://domain/by-entity-id/{entityId}", { list: undefined }),
             {
                 title: "Get domain of a specific entity",
-                description: "Get domain of a specific entity",
+                description: "Get domain of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
                 outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : EntityStateArraySchema
@@ -121,5 +121,54 @@ export class Entities extends BaseMcp {
             }
         );
 
+        this.registerResourceOrTool(
+            "search-related",
+            new ResourceTemplate("entity://search/related/{itemType}/{itemId}", { list: undefined }),
+            {
+                title: "Search related entities",
+                description: "Search for entities related to a specific item_type (like 'area') and entity_id (like 'studio')",
+                inputSchema: {
+                    itemType: z.string().describe("Type of the item, e.g. 'entity', 'area'"),
+                    itemId: z.string().describe("ID of the item, e.g. 'sensor.temperature' or 'area.living_room'")
+                },
+                mimeType: "application/json",
+                outputSchema: EntityStateArraySchema
+            },
+            async (uri: URL, { itemType, itemId }) => {
+                await this.ensureConnection();
+                const relatedEntities = await this.client!.searchRelatedEntities(itemType, itemId);
+                return {
+                    contents: Object.entries(relatedEntities).map(([key, entities]) => ({
+                        uri: `entity://search/related/${key}/${itemId}`,
+                        text: JSON.stringify(entities),
+                        mimeType: "application/json",
+                        _meta: {},
+                    })),
+                };
+            }
+        );
+
+        this.registerResourceOrTool(
+            "list-area",
+            "area://list",
+            {
+                title: "List all areas",
+                description: "List all Home Assistant areas",
+                inputSchema: {},
+                mimeType: "application/json",
+                outputSchema: undefined
+            },
+            async () => {
+                const areas = await this.client!.listAreas();
+                return {
+                    contents: areas.map((area) => ({
+                        uri: `area://${area.id}`,
+                        text: JSON.stringify(area),
+                        mimeType: "application/json",
+                        _meta: {},
+                    })),
+                };
+            }
+        );
     }
 }

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+import { stripSchemaKey } from "../helpers";
 
 export const HassStatusSchema = z.object({
     connected: z.boolean(),
@@ -140,7 +141,7 @@ export const ValidateConfigSchemaPrime = z.object({
     actions: z.array(z.unknown()).optional(),
 });
 export const ValidateConfigJSONSchema = zodToJsonSchema(ValidateConfigSchemaPrime);
-export const ValidateConfigSchema = ValidateConfigSchemaPrime.describe(JSON.stringify(ValidateConfigJSONSchema));
+export const ValidateConfigSchema = ValidateConfigSchemaPrime.describe(JSON.stringify(stripSchemaKey(ValidateConfigJSONSchema)));
 export type ValidateConfig = z.infer<typeof ValidateConfigSchema>;
 
 export const ValidateConfigResponseSchemaPrime = z.object({

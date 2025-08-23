@@ -39,20 +39,25 @@ export class ConfigMcp extends BaseMcp {
         this.server.registerTool(
             "validate-config",
             {
-                title: "Validate triggers, conditions and actions",
-                description: "Validate triggers, conditions and actions configurations as if part of an automation.",
-                inputSchema: { config: this.options.NO_LONG_INPUT_TYPES ? z.object({}).passthrough() : ValidateConfigSchema.passthrough() },
+                title: "Validate triggers, conditions and actions for any automation change",
+                description: "Validate triggers, conditions and actions configurations as if part of an automation. Any changes to automation should be checked with this tool",
+                inputSchema: { config: ValidateConfigSchema.passthrough() },
             },
             async ({ config }) => {
                 await this.ensureConnection();
                 try {
                     const result = await this.client!.validateConfig(config);
                     return { content: [{ type: "text", text: JSON.stringify(result), _meta: {} }] };
-                } catch (err: unknown) {
+                    // @ts-ignore
+                } catch (err: any) {
+                    if (this.options.DEBUG) {
+                        console.error("Config validation error:", err);
+                    }
                     return {
                         content: [{
                             type: "text",
-                            text: `Config validation failed: ${err instanceof Error ? err.message : "Unknown error"}\n${err instanceof Error ? err.stack : ""}`,
+                            // @ts-ignore
+                            text: `Config validation failed: ${err.code} : ${err.message}`,
                             _meta: { error: true }
                         }]
                     };

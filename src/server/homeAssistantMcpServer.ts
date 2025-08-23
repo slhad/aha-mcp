@@ -22,7 +22,9 @@ export class HomeAssistantMCPServer {
         this.client = { ref: undefined as unknown as HASSClient, ensureConnection: this.ensureConnection.bind(this) };
 
         if (this.config.debugMode) {
-            console.error("Initializing Home Assistant MCP Server with config:", this.config);
+            const obfuscatedConfig = JSON.parse(JSON.stringify(this.config));
+            obfuscatedConfig.accessToken = "***";
+            console.error("Initializing Home Assistant MCP Server with config:", obfuscatedConfig);
         }
 
         this.server = new McpServer({

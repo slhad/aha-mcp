@@ -17,6 +17,27 @@ With this server, you can:
 - Search for entities by prefix or regex
 - Access entity sources and registry information
 
+## Table of Contents
+
+- [AHA Model Context Protocol (MCP) Server](#aha-model-context-protocol-mcp-server)
+  - [Table of Contents](#table-of-contents)
+  - [Motivation](#motivation)
+  - [Features](#features)
+  - [Available Tools](#available-tools)
+    - [Generating Tools Documentation](#generating-tools-documentation)
+  - [Project Structure](#project-structure)
+  - [Example: Running the MCP Server](#example-running-the-mcp-server)
+    - [1. Run with Node.js (with tsx in global path) (most likely for development)](#1-run-with-nodejs-with-tsx-in-global-path-most-likely-for-development)
+    - [2. Run with Podman (drop-in docker remplacement)](#2-run-with-podman-drop-in-docker-remplacement)
+  - [Environment Variables](#environment-variables)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Running the Server](#running-the-server)
+    - [Running Tests](#running-tests)
+    - [Docker Usage](#docker-usage)
+  - [Contributing](#contributing)
+  - [License](#license)
+
 ## Motivation
 
 While exploring existing MCP server implementations for Home Assistant, I found that:
@@ -38,6 +59,31 @@ This project aims to address these gaps by providing a reliable and fully functi
 - Lovelace dashboard support
 - TypeScript codebase with Vitest for testing
 - Docker support for easy deployment
+
+## Available Tools
+
+This MCP server provides **comprehensive tools** for interacting with Home Assistant, including:
+
+- **Automation Management**: Create, update, delete, and trace automations
+- **Entity Operations**: Query and manipulate Home Assistant entities
+- **Service Calls**: Execute Home Assistant services
+- **Configuration**: Validate and manage Home Assistant configuration
+- **Registry Access**: Access entity and device registries
+
+For a complete list of all available tools with detailed descriptions and parameters, see the **[Tools Documentation](tools.md)**.
+
+### Generating Tools Documentation
+
+The tools documentation is automatically generated from the MCP server:
+
+```sh
+npm run generate-docs
+```
+
+This command will:
+1. Extract all available tools from the MCP server
+2. Generate a comprehensive markdown documentation file (`tools.md`)
+3. Clean up temporary files
 
 ## Project Structure
 - `src/` - Main source code

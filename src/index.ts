@@ -11,7 +11,7 @@ const config: HASSConfig = {
     NO_LONG_OUTPUT_TYPES: process.env.NO_LONG_OUTPUT_TYPES === "true",
 };
 
-if (!config.accessToken) {
+if (!config.accessToken && process.env.INSPECT !== "true") {
     console.error("Missing HASS_ACCESS_TOKEN");
     process.exit(1);
 }

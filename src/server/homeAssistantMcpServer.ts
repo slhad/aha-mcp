@@ -52,6 +52,9 @@ export class HomeAssistantMCPServer {
     }
 
     private async ensureConnection() {
+        if (process.env.INSPECT === "true") {
+            return;
+        }
         if (!this.client.ref) {
             this.client.ref = await HASSClient.create(this.config);
         }

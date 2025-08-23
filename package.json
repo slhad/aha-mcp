@@ -16,7 +16,10 @@
         "pretest:short": "npm run format",
         "test:short": "vitest --run --silent --no-color --hideSkippedTests  --reporter=default",
         "check": "tsc --noEmit",
-        "format": "eslint --fix ."
+        "format": "eslint --fix .",
+        "extracttools": "cross-env INSPECT=true RESOURCES_TO_TOOLS=true npx @modelcontextprotocol/inspector --cli tsx src/index.ts --method tools/list > tools.json",
+        "tools-to-md": "node scripts/tools-to-markdown.js",
+        "generate-docs": "npm run extracttools && npm run tools-to-md"
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "^1.17.3",
@@ -24,9 +27,11 @@
         "zod-to-json-schema": "^3.24.6"
     },
     "devDependencies": {
+        "@modelcontextprotocol/inspector": "^0.16.5",
         "@types/node": "^20.8.0",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
         "@typescript-eslint/parser": "^6.21.0",
+        "cross-env": "^10.0.0",
         "eslint": "^8.57.1",
         "tsx": "^4.7.0",
         "typescript": "^5.2.2",

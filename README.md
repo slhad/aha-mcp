@@ -29,7 +29,8 @@ With this server, you can:
   - [Example: Running the MCP Server](#example-running-the-mcp-server)
     - [1. Run with Node.js (with tsx in global path) (most likely for development)](#1-run-with-nodejs-with-tsx-in-global-path-most-likely-for-development)
     - [2. Run with Podman (drop-in docker remplacement)](#2-run-with-podman-drop-in-docker-remplacement)
-  - [Environment Variables](#environment-variables)
+    - [Environment Variables](#environment-variables)
+  - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Running the Server](#running-the-server)
@@ -146,7 +147,7 @@ You can run the MCP server using the same command and argument structure as in y
 
 Replace `<your_token_here>` with your actual Home Assistant access token.
 
-## Environment Variables
+### Environment Variables
 
 The following environment variables can be set to configure the MCP server:
 
@@ -160,6 +161,7 @@ The following environment variables can be set to configure the MCP server:
 - `NO_LONG_INPUT_TYPES`: Set to `true` to disable long input types. Default: `false`.
 - `NO_LONG_OUTPUT_TYPES`: Set to `true` to disable long output types. Default: `false`.
 
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18+ recommended)

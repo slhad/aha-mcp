@@ -25,6 +25,29 @@ export abstract class BaseMcp {
         return this.refClient.ref;
     }
 
+    private transformResourceResultToTool(name: string, result: any) {
+        if (this.options.DEBUG) {
+            console.error(`Raw resource ${name}:`, JSON.stringify(result, undefined, 0));
+        }
+        const content = result.contents[0];
+        const noContent = !content.text;
+        if (noContent) {
+            content.text = "No data found";
+        } else if (result.contents.length > 1) {
+            content.text = `[${result.contents.map((c: any) => c.text).join(",")}]`;
+        }
+        content.type = "text";
+        delete content.uri;
+        delete content.mimeType;
+        const final = {
+            content: [content]
+        };
+        if (this.options.DEBUG) {
+            console.error(`Resource to Tool ${name}:`, JSON.stringify(final, undefined, 0));
+        }
+        return final;
+    }
+
     registerResourceOrTool(
         name: string,
         templateOrUri: string | ResourceTemplate,
@@ -54,50 +77,9 @@ export abstract class BaseMcp {
                     outputSchema: options.outputSchema?.shape ? options.outputSchema.shape : undefined,
                 },
                 async (args: Record<string, unknown>) => {
-                    // If template, extract params from args and call handler
-                    if (typeof templateOrUri === "string") {
-                        const result = await handler(undefined, args);
-                        if (this.options.DEBUG) {
-                            console.error(`Raw resource ${name}:`, JSON.stringify(result));
-                        }
-                        const content = result.contents[0];
-                        const noContent = !content.text;
-                        if (noContent) {
-                            content.text = "No data found";
-                        }
-                        content.type = "text";
-                        delete content.uri;
-                        delete content.mimeType;
-                        const final = {
-                            content: [content]
-                        };
-                        if (this.options.DEBUG) {
-                            console.error(`Resource to Tool ${name}:`, JSON.stringify(final));
-                        }
-                        return final;
-                    } else {
-                        // ResourceTemplate: build a fake URI for compatibility
-                        const uri = new URL("http://dummy/" + name);
-                        const result = await handler(uri, args);
-                        if (this.options.DEBUG) {
-                            console.error(`Raw resource ${name}:`, JSON.stringify(result));
-                        }
-                        const content = result.contents[0];
-                        const noContent = !content.text;
-                        if (noContent) {
-                            content.text = "No data found";
-                        }
-                        content.type = "text";
-                        delete content.uri;
-                        delete content.mimeType;
-                        const final = {
-                            content: [content]
-                        };
-                        if (this.options.DEBUG) {
-                            console.error(`Resource to Tool ${name}:`, JSON.stringify(final));
-                        }
-                        return final;
-                    }
+                    const firstArg = typeof templateOrUri === "string" ? undefined : new URL("http://dummy/" + name);
+                    const result = await handler(firstArg, args);
+                    return this.transformResourceResultToTool(name, result);
                 }
             );
         } else {

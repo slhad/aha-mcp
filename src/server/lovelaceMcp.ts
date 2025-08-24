@@ -2,6 +2,7 @@
 import { BaseMcp } from "./baseMcp";
 import { z } from "zod";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { DashboardConfigSchema } from "../hass/typesFront";
 
 export class LovelaceMcp extends BaseMcp {
     register(): void {
@@ -50,8 +51,8 @@ export class LovelaceMcp extends BaseMcp {
                 title: "Update Lovelace Config",
                 description: "Update Lovelace dashboard config by url_path.",
                 inputSchema: {
-                    url_path: z.string(),
-                    config: z.record(z.any()),
+                    url_path: z.string().describe("The URL path of the Lovelace dashboard config to update"),
+                    config: DashboardConfigSchema.describe("The updated Lovelace dashboard config"),
                 }
             },
             async ({ url_path, config }) => {

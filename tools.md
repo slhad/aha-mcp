@@ -42,7 +42,7 @@ This document lists all available tools in the Home Assistant MCP Server.
 | `list-area` | List all areas | List all Home Assistant areas | None | None |
 | `get-lovelace-config` | Get Lovelace Config | Fetch Lovelace dashboard config by url_path. The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-' | `url_path` (string): The URL path of the Lovelace dashboard config to fetch, e.g., 'default-view' or 'dashboard-id' 
 The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-' | `force` (boolean):  |
-| `update-lovelace-config` | Update Lovelace Config | Update Lovelace dashboard config by url_path. | `url_path` (string): <br>`config` (object):  | None |
+| `update-lovelace-config` | Update Lovelace Config | Update Lovelace dashboard config by url_path. | `url_path` (string): The URL path of the Lovelace dashboard config to update<br>`config` (object): The updated Lovelace dashboard config | None |
 | `list-lovelace-dashboards` | List Lovelace Dashboards | List all Lovelace dashboards. | None | None |
 | `create-lovelace-dashboard` | Create Lovelace Dashboard | Create a new Lovelace dashboard. | `title` (string): <br>`url_path` (string): The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-' | `require_admin` (boolean): <br>`show_in_sidebar` (boolean):  |
 | `delete-lovelace-dashboard` | Delete Lovelace Dashboard | Delete a Lovelace dashboard by dashboard_id. | `dashboard_id` (string):  | None |
@@ -426,8 +426,8 @@ The URL must contain a dash ('-') and must not contain spaces or special charact
 **Description:** Update Lovelace dashboard config by url_path.
 
 **Required Parameters:**
-- `url_path` (string): 
-- `config` (object): 
+- `url_path` (string): The URL path of the Lovelace dashboard config to update
+- `config` (object): The updated Lovelace dashboard config
 
 ---
 

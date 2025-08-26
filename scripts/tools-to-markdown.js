@@ -1,8 +1,19 @@
 #!/usr/bin/env node
 
 import { readFileSync, writeFileSync, unlinkSync } from 'fs';
+
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+
+import { encoding_for_model } from 'tiktoken';
+
+async function countTokens(str, model = "gpt-4.1") {
+    const enc = encoding_for_model(model);
+    const tokens = enc.encode(str);
+    const count = tokens.length;
+    enc.free();
+    return count;
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -55,6 +66,7 @@ try {
         throw new Error('Invalid tools.json format: expected "tools" array');
     }
 
+
     // Generate markdown content
     let markdownContent = `# Home Assistant MCP Server Tools
 
@@ -64,16 +76,26 @@ This document lists all available tools in the Home Assistant MCP Server.
 
 ## Tools Overview
 
-| Tool Name | Title | Description | Required Parameters | Optional Parameters |
-|-----------|-------|-------------|---------------------|---------------------|
+| ~ Tokens | Tool Name | Title | Description | Required Parameters | Optional Parameters |
+|----------|-----------|-------|-------------|---------------------|---------------------|
 `;
 
-    // Process each tool
-    toolsData.tools.forEach(tool => {
+
+    for (const tool of toolsData.tools) {
         const requiredParams = extractRequiredParams(tool.inputSchema);
         const optionalParams = extractOptionalParams(tool.inputSchema);
 
+        // Count tokens for the tool declaration (as JSON)
+        const toolJson = JSON.stringify(tool);
+        let tokenCount = 0;
+        try {
+            tokenCount = await countTokens(toolJson);
+        } catch (e) {
+            tokenCount = 'ERR';
+        }
+
         const row = [
+            tokenCount,
             `\`${escapeMarkdown(tool.name)}\``,
             escapeMarkdown(tool.title || ''),
             escapeMarkdown(tool.description || ''),
@@ -82,7 +104,7 @@ This document lists all available tools in the Home Assistant MCP Server.
         ].join(' | ');
 
         markdownContent += `| ${row} |\n`;
-    });
+    }
 
     // Add detailed section
     markdownContent += `\n## Detailed Tool Descriptions\n\n`;

@@ -19,8 +19,8 @@
 - Use `npm run dev` for development, `npm run test` for unit tests
 - Use Docker or docker-compose for deployment
 - Main entry: [`src/index.ts`](src/index.ts:1)
-- MCP server: [`src/server/mcp-server.ts`](src/server/mcp-server.ts:1)
-- Home Assistant integration: [`src/hass/websocket.ts`](src/hass/websocket.ts:1), [`src/hass/types.ts`](src/hass/types.ts:1)
+- MCP server: [`src/server/homeAssistantMcpServer.ts`](src/server/homeAssistantMcpServer.ts:1)
+- Home Assistant integration: [`src/hass/hassClient.ts`](src/hass/hassClient.ts:1), [`src/hass/types.ts`](src/hass/types.ts:1)
 
 ## Important Stuff
 - All MCP tools are registered in the MCP server class

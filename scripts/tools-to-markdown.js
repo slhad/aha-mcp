@@ -65,7 +65,7 @@ This document lists all available tools in the Home Assistant MCP Server.
 ## Tools Overview
 
 | Tool Name | Title | Description | Required Parameters | Optional Parameters |
-|-----------|-------|-------------|-------------------|-------------------|
+|-----------|-------|-------------|---------------------|---------------------|
 `;
 
     // Process each tool

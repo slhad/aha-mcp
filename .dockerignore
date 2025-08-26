@@ -9,3 +9,4 @@ coverage/
 .vscode/
 .kilocode/
 tests/hass-real-config.ts
+*.md

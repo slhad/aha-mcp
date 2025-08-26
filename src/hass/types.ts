@@ -29,8 +29,6 @@ export const HASSConfigSchema = z.object({
     debugMode: z.boolean().optional(),
     RESOURCES_TO_TOOLS: z.boolean().optional(),
     LIMIT_RESOURCES: z.number().optional(),
-    NO_LONG_INPUT_TYPES: z.boolean().optional(),
-    NO_LONG_OUTPUT_TYPES: z.boolean().optional(),
     transport: z.enum(["stdio", "sse", "streamablehttp"]).optional(),
     port: z.number().min(1).max(65535).optional(),
 });
@@ -39,8 +37,6 @@ export type ConfigMcpDef = {
     DEBUG: boolean;
     RESOURCES_TO_TOOLS: boolean;
     LIMIT_RESOURCES: number;
-    NO_LONG_INPUT_TYPES: boolean;
-    NO_LONG_OUTPUT_TYPES: boolean;
 }
 
 export const EntityStateSchemaPrime = z.object({

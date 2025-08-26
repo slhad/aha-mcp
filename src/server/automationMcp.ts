@@ -29,8 +29,8 @@ export class AutomationMcp extends BaseMcp {
                     rest_id: z.string().describe("Automation REST API id"),
                     run_id: z.string().describe("Automation run id"),
                 },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(AutomationRestTraceJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : AutomationRestTraceSchema
+                mimeType: JSON.stringify(stripSchemaKey(AutomationRestTraceJsonSchema)),
+                outputSchema: AutomationRestTraceSchema
             },
             async (uri: URL, { rest_id, run_id }) => {
                 await this.ensureConnection();
@@ -57,8 +57,8 @@ export class AutomationMcp extends BaseMcp {
                 inputSchema: {
                     rest_id: z.string().describe("Automation REST API id"),
                 },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(AutomationRestShortArrayJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : AutomationRestShortArraySchema
+                mimeType: JSON.stringify(stripSchemaKey(AutomationRestShortArrayJsonSchema)),
+                outputSchema: AutomationRestShortArraySchema
             },
             async (uri: URL, { rest_id }) => {
                 await this.ensureConnection();
@@ -83,8 +83,8 @@ export class AutomationMcp extends BaseMcp {
                 title: "List all automations",
                 description: "List all automations",
                 inputSchema: {},
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey([AutomationJsonSchema])),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : AutomationSchema
+                mimeType: JSON.stringify(stripSchemaKey([AutomationJsonSchema])),
+                outputSchema: AutomationSchema
             },
             async () => {
                 await this.ensureConnection();
@@ -124,8 +124,8 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get automation by entity_id",
                 description: "Find an automation entity using its entity_id (e.g. automation.my_automation).",
                 inputSchema: { entity_id: z.string().describe("Automation entity_id, e.g. 'automation.my_automation'") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(AutomationJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : AutomationSchema
+                mimeType: JSON.stringify(stripSchemaKey(AutomationJsonSchema)),
+                outputSchema: AutomationSchema
             },
             async (uri: URL, { entity_id }) => {
                 await this.ensureConnection();
@@ -150,8 +150,8 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get REST automation by entity_id",
                 description: "Get an automation's REST definition using its entity_id (e.g. automation.my_automation).",
                 inputSchema: { entity_id: z.string().describe("Automation entity_id, e.g. 'automation.my_automation'") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(AutomationRestJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : AutomationRestSchema
+                mimeType: JSON.stringify(stripSchemaKey(AutomationRestJsonSchema)),
+                outputSchema: AutomationRestSchema
             },
             async (uri: URL, { entity_id }) => {
                 await this.ensureConnection();
@@ -176,7 +176,7 @@ export class AutomationMcp extends BaseMcp {
                 description: "Update an automation using its entity_id (e.g. automation.my_automation).",
                 inputSchema: {
                     entity_id: z.string().describe("Automation entity_id, e.g. 'automation.my_automation'"),
-                    automation: this.options.NO_LONG_INPUT_TYPES ? z.object({}).passthrough() : AutomationRestSchema,
+                    automation: AutomationRestSchema,
                 },
             },
             async (args: Record<string, unknown>) => {
@@ -195,8 +195,8 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get automation by rest_id",
                 description: "Find an automation entity using its REST API id (rest_id, not entity_id).",
                 inputSchema: { rest_id: z.string().describe("Automation REST API id") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(AutomationJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : AutomationSchema
+                mimeType: JSON.stringify(stripSchemaKey(AutomationJsonSchema)),
+                outputSchema: AutomationSchema
             },
             async (uri: URL, { rest_id }) => {
                 await this.ensureConnection();
@@ -221,8 +221,8 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get REST automation by rest_id",
                 description: "Get an automation's REST definition using its rest_id (REST API id, not entity_id).",
                 inputSchema: { rest_id: z.string().describe("Automation REST API id") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(AutomationRestJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : AutomationRestSchema
+                mimeType: JSON.stringify(stripSchemaKey(AutomationRestJsonSchema)),
+                outputSchema: AutomationRestSchema
             },
             async (uri: URL, { rest_id }) => {
                 await this.ensureConnection();
@@ -245,7 +245,7 @@ export class AutomationMcp extends BaseMcp {
             {
                 title: "Update REST automation by rest_id",
                 description: "Update an automation using its rest_id (REST API id, not entity_id).",
-                inputSchema: { automation: this.options.NO_LONG_INPUT_TYPES ? z.object({}).passthrough() : AutomationRestSchema },
+                inputSchema: { automation: AutomationRestSchema },
             },
             async (args: Record<string, unknown>) => {
                 await this.ensureConnection();
@@ -275,7 +275,7 @@ export class AutomationMcp extends BaseMcp {
             {
                 title: "Create REST automation",
                 description: "Create a new automation via the Home Assistant REST API. Returns the new rest_id.",
-                inputSchema: { automation: this.options.NO_LONG_INPUT_TYPES ? z.object({}).passthrough() : AutomationCreateRestSchema },
+                inputSchema: { automation: AutomationCreateRestSchema },
             },
             async ({ automation }) => {
                 await this.ensureConnection();

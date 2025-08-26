@@ -9,8 +9,6 @@ const config: HASSConfig = {
     debugMode: process.env.DEBUG === "true",
     RESOURCES_TO_TOOLS: process.env.RESOURCES_TO_TOOLS === "true",
     LIMIT_RESOURCES: process.env.LIMIT_RESOURCES ? parseInt(process.env.LIMIT_RESOURCES) : undefined,
-    NO_LONG_INPUT_TYPES: process.env.NO_LONG_INPUT_TYPES === "true",
-    NO_LONG_OUTPUT_TYPES: process.env.NO_LONG_OUTPUT_TYPES === "true",
     transport: process.env.TRANSPORT as "stdio" | "sse" | "streamablehttp" | undefined,
     port: process.env.PORT ? parseInt(process.env.PORT) : 3000
 };

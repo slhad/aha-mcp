@@ -13,8 +13,8 @@ export class Entities extends BaseMcp {
                 title: "List all entities by prefix",
                 description: "List all Home Assistant entities by prefix",
                 inputSchema: { prefix: z.string().describe("Prefix to filter entities, e.g. 'sensor.'") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(EntityStateArrayJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : EntityStateArraySchema
+                mimeType: JSON.stringify(stripSchemaKey(EntityStateArrayJsonSchema)),
+                outputSchema: EntityStateArraySchema
             },
             async (uri: URL, { prefix }) => {
                 await this.ensureConnection();
@@ -42,8 +42,8 @@ export class Entities extends BaseMcp {
                     pattern: z.string().describe("Regex pattern for entity IDs, e.g. '^sensor\\.'"),
                     flags: z.string().describe("Regex flags, e.g. 'i' for ignore case")
                 },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(EntityStateArrayJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : EntityStateArraySchema
+                mimeType: JSON.stringify(stripSchemaKey(EntityStateArrayJsonSchema)),
+                outputSchema: EntityStateArraySchema
             },
             async (uri: URL, { pattern, flags }) => {
                 await this.ensureConnection();
@@ -74,8 +74,8 @@ export class Entities extends BaseMcp {
                 title: "Get state of a specific entity",
                 description: "Get state of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : EntityStateSchema
+                mimeType: JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
+                outputSchema: EntityStateSchema
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();
@@ -102,8 +102,8 @@ export class Entities extends BaseMcp {
                 title: "Get domain of a specific entity",
                 description: "Get domain of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : EntityStateArraySchema
+                mimeType: JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
+                outputSchema: EntityStateArraySchema
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();

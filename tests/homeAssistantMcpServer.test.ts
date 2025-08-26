@@ -21,8 +21,6 @@ describe("HomeAssistantMCPServer", () => {
 
     beforeEach(() => {
         vi.stubEnv("RESOURCES_TO_TOOLS", "true");
-        vi.stubEnv("NO_LONG_INPUT_TYPES", "true");
-        vi.stubEnv("NO_LONG_OUTPUT_TYPES", "true");
     });
 
     afterEach(() => {

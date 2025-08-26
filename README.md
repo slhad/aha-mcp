@@ -129,8 +129,6 @@ For traditional MCP client integration via stdio (server is launched by MCP clie
   "env": {
     "LIMIT_RESOURCES": "-1",
     "RESOURCES_TO_TOOLS": "true",
-    "NO_LONG_INPUT_TYPES": "true",
-    "NO_LONG_OUTPUT_TYPES": "true",
     "DEBUG": "true",
     "HASS_URL": "https://your-home-assistant.local:8123",
     "HASS_ACCESS_TOKEN": "<your_token_here>"
@@ -262,8 +260,6 @@ The following environment variables can be set to configure the MCP server:
   - **Detailed explanation:**
     When enabled, this option exposes Home Assistant resources (such as entities, automations, and services) as individual tools for MCP clients. This is especially useful for clients or agents that can only interact with the server via tool-based interfaces, rather than through generic resource queries. It allows such clients to discover and use Home Assistant features as discrete, callable tools, improving compatibility and usability for tool-limited environments.
 - `LIMIT_RESOURCES`: Set to a number to limit the number of resources returned by the server. Default: unlimited.
-- `NO_LONG_INPUT_TYPES`: Set to `true` to disable long input types. Default: `false`.
-- `NO_LONG_OUTPUT_TYPES`: Set to `true` to disable long output types. Default: `false`.
 
 ## Getting Started
 

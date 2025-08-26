@@ -43,8 +43,6 @@ export class HomeAssistantMCPServer {
             DEBUG: this.config.debugMode ?? false,
             RESOURCES_TO_TOOLS: this.config.RESOURCES_TO_TOOLS ?? false,
             LIMIT_RESOURCES: typeof this.config.LIMIT_RESOURCES === "number" ? this.config.LIMIT_RESOURCES : -1,
-            NO_LONG_INPUT_TYPES: this.config.NO_LONG_INPUT_TYPES ?? false,
-            NO_LONG_OUTPUT_TYPES: this.config.NO_LONG_OUTPUT_TYPES ?? false
         };
         this.mcps.push(new AutomationMcp(this.server, this.client, configMcp));
         this.mcps.push(new ConfigMcp(this.server, this.client, configMcp));

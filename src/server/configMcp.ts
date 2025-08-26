@@ -14,8 +14,8 @@ export class ConfigMcp extends BaseMcp {
                 title: "Get Home Assistant connection status",
                 description: "Get Home Assistant connection status",
                 inputSchema: {},
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(HassStatusJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : HassStatusSchema
+                mimeType: JSON.stringify(stripSchemaKey(HassStatusJsonSchema)),
+                outputSchema: HassStatusSchema
             },
             async () => {
                 await this.ensureConnection();

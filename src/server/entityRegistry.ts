@@ -14,8 +14,8 @@ export class EntityRegistry extends BaseMcp {
                 title: "Get entity registry by entity_id",
                 description: "Get registry info for a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(EntityRegistryJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : EntityRegistrySchema
+                mimeType: JSON.stringify(stripSchemaKey(EntityRegistryJsonSchema)),
+                outputSchema: EntityRegistrySchema
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();
@@ -40,8 +40,8 @@ export class EntityRegistry extends BaseMcp {
                 title: "Get device_id by entity_id",
                 description: "Get the device_id for a given entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: this.options.NO_LONG_INPUT_TYPES ? "application/json" : JSON.stringify(stripSchemaKey(DeviceIdResponseJsonSchema)),
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : DeviceIdResponseSchema
+                mimeType: JSON.stringify(stripSchemaKey(DeviceIdResponseJsonSchema)),
+                outputSchema: DeviceIdResponseSchema
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();
@@ -67,7 +67,7 @@ export class EntityRegistry extends BaseMcp {
                 description: "Get the config_entry_id for a given entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: "application/json",
-                outputSchema: this.options.NO_LONG_OUTPUT_TYPES ? undefined : { config_entry_id: z.string().describe("Config entry ID for the entity") }
+                outputSchema: { config_entry_id: z.string().describe("Config entry ID for the entity") }
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();

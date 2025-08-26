@@ -16,6 +16,10 @@ export class HomeAssistantMCPServer {
     private server: McpServer;
     private mcps: BaseMcp[] = [];
 
+    getServer() {
+        return this.server;
+    }
+
     constructor(private config: HASSConfig) {
 
         // That's for the late initialization, yes it's ugly by ref

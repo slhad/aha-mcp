@@ -31,6 +31,8 @@ export const HASSConfigSchema = z.object({
     LIMIT_RESOURCES: z.number().optional(),
     NO_LONG_INPUT_TYPES: z.boolean().optional(),
     NO_LONG_OUTPUT_TYPES: z.boolean().optional(),
+    transport: z.enum(["stdio", "sse", "streamablehttp"]).optional(),
+    port: z.number().min(1).max(65535).optional(),
 });
 export type HASSConfig = z.infer<typeof HASSConfigSchema>;
 export type ConfigMcpDef = {

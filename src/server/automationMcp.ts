@@ -3,17 +3,12 @@ import { z } from "zod";
 import {
     AutomationCreateRest,
     AutomationCreateRestSchema,
-    AutomationJsonSchema,
     AutomationRest,
-    AutomationRestJsonSchema,
     AutomationRestSchema,
-    AutomationRestShortArrayJsonSchema,
     AutomationRestShortArraySchema,
-    AutomationRestTraceJsonSchema,
     AutomationRestTraceSchema,
     AutomationSchema
 } from "../hass/types.js";
-import { stripSchemaKey } from "../helpers.js";
 import { BaseMcp } from "./baseMcp.js";
 
 export class AutomationMcp extends BaseMcp {
@@ -29,7 +24,7 @@ export class AutomationMcp extends BaseMcp {
                     rest_id: z.string().describe("Automation REST API id"),
                     run_id: z.string().describe("Automation run id"),
                 },
-                mimeType: JSON.stringify(stripSchemaKey(AutomationRestTraceJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: AutomationRestTraceSchema
             },
             async (uri: URL, { rest_id, run_id }) => {
@@ -57,7 +52,7 @@ export class AutomationMcp extends BaseMcp {
                 inputSchema: {
                     rest_id: z.string().describe("Automation REST API id"),
                 },
-                mimeType: JSON.stringify(stripSchemaKey(AutomationRestShortArrayJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: AutomationRestShortArraySchema
             },
             async (uri: URL, { rest_id }) => {
@@ -83,7 +78,7 @@ export class AutomationMcp extends BaseMcp {
                 title: "List all automations",
                 description: "List all automations",
                 inputSchema: {},
-                mimeType: JSON.stringify(stripSchemaKey([AutomationJsonSchema])),
+                mimeType: "application/json",
                 outputSchema: AutomationSchema
             },
             async () => {
@@ -124,7 +119,7 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get automation by entity_id",
                 description: "Find an automation entity using its entity_id (e.g. automation.my_automation).",
                 inputSchema: { entity_id: z.string().describe("Automation entity_id, e.g. 'automation.my_automation'") },
-                mimeType: JSON.stringify(stripSchemaKey(AutomationJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: AutomationSchema
             },
             async (uri: URL, { entity_id }) => {
@@ -150,7 +145,7 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get REST automation by entity_id",
                 description: "Get an automation's REST definition using its entity_id (e.g. automation.my_automation).",
                 inputSchema: { entity_id: z.string().describe("Automation entity_id, e.g. 'automation.my_automation'") },
-                mimeType: JSON.stringify(stripSchemaKey(AutomationRestJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: AutomationRestSchema
             },
             async (uri: URL, { entity_id }) => {
@@ -195,7 +190,7 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get automation by rest_id",
                 description: "Find an automation entity using its REST API id (rest_id, not entity_id).",
                 inputSchema: { rest_id: z.string().describe("Automation REST API id") },
-                mimeType: JSON.stringify(stripSchemaKey(AutomationJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: AutomationSchema
             },
             async (uri: URL, { rest_id }) => {
@@ -221,7 +216,7 @@ export class AutomationMcp extends BaseMcp {
                 title: "Get REST automation by rest_id",
                 description: "Get an automation's REST definition using its rest_id (REST API id, not entity_id).",
                 inputSchema: { rest_id: z.string().describe("Automation REST API id") },
-                mimeType: JSON.stringify(stripSchemaKey(AutomationRestJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: AutomationRestSchema
             },
             async (uri: URL, { rest_id }) => {

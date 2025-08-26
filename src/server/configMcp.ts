@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { HassStatusJsonSchema, HassStatusSchema, ValidateConfigSchema } from "../hass/types";
-import { stripSchemaKey } from "../helpers";
+import { HassStatusSchema, ValidateConfigSchema } from "../hass/types";
 import { BaseMcp } from "./baseMcp";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 
@@ -14,7 +13,7 @@ export class ConfigMcp extends BaseMcp {
                 title: "Get Home Assistant connection status",
                 description: "Get Home Assistant connection status",
                 inputSchema: {},
-                mimeType: JSON.stringify(stripSchemaKey(HassStatusJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: HassStatusSchema
             },
             async () => {

@@ -1,7 +1,6 @@
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { DeviceIdResponseJsonSchema, DeviceIdResponseSchema, EntityRegistryJsonSchema, EntityRegistrySchema } from "../hass/types";
-import { stripSchemaKey } from "../helpers";
+import { DeviceIdResponseSchema, EntityRegistrySchema } from "../hass/types";
 import { BaseMcp } from "./baseMcp";
 
 export class EntityRegistry extends BaseMcp {
@@ -14,7 +13,7 @@ export class EntityRegistry extends BaseMcp {
                 title: "Get entity registry by entity_id",
                 description: "Get registry info for a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: JSON.stringify(stripSchemaKey(EntityRegistryJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: EntityRegistrySchema
             },
             async (uri: URL, { entityId }) => {
@@ -40,7 +39,7 @@ export class EntityRegistry extends BaseMcp {
                 title: "Get device_id by entity_id",
                 description: "Get the device_id for a given entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: JSON.stringify(stripSchemaKey(DeviceIdResponseJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: DeviceIdResponseSchema
             },
             async (uri: URL, { entityId }) => {

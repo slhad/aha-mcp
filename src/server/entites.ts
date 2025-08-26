@@ -1,7 +1,6 @@
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { EntityStateArrayJsonSchema, EntityStateArraySchema, EntityStateJsonSchema, EntityStateSchema } from "../hass/types";
-import { stripSchemaKey } from "../helpers";
+import { EntityStateArraySchema, EntityStateSchema } from "../hass/types";
 import { BaseMcp } from "./baseMcp";
 
 export class Entities extends BaseMcp {
@@ -13,7 +12,7 @@ export class Entities extends BaseMcp {
                 title: "List all entities by prefix",
                 description: "List all Home Assistant entities by prefix",
                 inputSchema: { prefix: z.string().describe("Prefix to filter entities, e.g. 'sensor.'") },
-                mimeType: JSON.stringify(stripSchemaKey(EntityStateArrayJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: EntityStateArraySchema
             },
             async (uri: URL, { prefix }) => {
@@ -42,7 +41,7 @@ export class Entities extends BaseMcp {
                     pattern: z.string().describe("Regex pattern for entity IDs, e.g. '^sensor\\.'"),
                     flags: z.string().describe("Regex flags, e.g. 'i' for ignore case")
                 },
-                mimeType: JSON.stringify(stripSchemaKey(EntityStateArrayJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: EntityStateArraySchema
             },
             async (uri: URL, { pattern, flags }) => {
@@ -74,7 +73,7 @@ export class Entities extends BaseMcp {
                 title: "Get state of a specific entity",
                 description: "Get state of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: EntityStateSchema
             },
             async (uri: URL, { entityId }) => {
@@ -102,7 +101,7 @@ export class Entities extends BaseMcp {
                 title: "Get domain of a specific entity",
                 description: "Get domain of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
-                mimeType: JSON.stringify(stripSchemaKey(EntityStateJsonSchema)),
+                mimeType: "application/json",
                 outputSchema: EntityStateArraySchema
             },
             async (uri: URL, { entityId }) => {

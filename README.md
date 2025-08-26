@@ -17,6 +17,11 @@ With this server, you can:
 - Search for entities by prefix or regex
 - Access entity sources and registry information
 
+The server supports multiple transport methods:
+- **STDIO**: Traditional MCP client communication (default)
+- **Server-Sent Events (SSE)**: Web-based real-time communication
+- **Streamable HTTP**: HTTP-based MCP communication for web integration
+
 ## Table of Contents
 
 - [AHA Model Context Protocol (MCP) Server](#aha-model-context-protocol-mcp-server)
@@ -27,8 +32,12 @@ With this server, you can:
     - [Generating Tools Documentation](#generating-tools-documentation)
   - [Project Structure](#project-structure)
   - [Example: Running the MCP Server](#example-running-the-mcp-server)
-    - [1. Run with Node.js (with tsx in global path) (most likely for development)](#1-run-with-nodejs-with-tsx-in-global-path-most-likely-for-development)
-    - [2. Run with Podman (drop-in docker remplacement)](#2-run-with-podman-drop-in-docker-remplacement)
+    - [1. Run with STDIO Transport (Default)](#1-run-with-stdio-transport-default)
+    - [2. Run with Server-Sent Events (SSE) Transport](#2-run-with-server-sent-events-sse-transport)
+    - [3. Run with Streamable HTTP Transport](#3-run-with-streamable-http-transport)
+    - [4. Quick SSE Server Startup Script](#4-quick-sse-server-startup-script)
+    - [5. Run with Podman/Docker - STDIO Transport](#5-run-with-podmandocker---stdio-transport)
+    - [6. Run with Podman/Docker - HTTP/SSE Server](#6-run-with-podmandocker---httpsse-server)
     - [Environment Variables](#environment-variables)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
@@ -58,6 +67,7 @@ This project aims to address these gaps by providing a reliable and fully functi
 - Entity registry and management
 - Automation and configuration MCP endpoints
 - Lovelace dashboard support
+- **Multiple transport options**: stdio, Server-Sent Events (SSE), and Streamable HTTP
 - TypeScript codebase with Vitest for testing
 - Docker support for easy deployment
 
@@ -90,19 +100,24 @@ This command will:
 - `src/` - Main source code
   - `hass/` - Home Assistant client and helpers
   - `server/` - MCP server implementations
+  - `mcpTransports.ts` - Transport layer implementations (HTTP, SSE)
 - `tests/` - Test files and Home Assistant config examples
+- `scripts/` - Build and documentation generation scripts
 - `Dockerfile` - Containerization support
 - `package.json` - Project dependencies and scripts
 - `tsconfig.json` - TypeScript configuration
 - `vitest.config.ts` - Vitest test runner configuration
+- `runSSEServer.sh` - Quick SSE server startup script
 
 
 
 ## Example: Running the MCP Server
 
-You can run the MCP server using the same command and argument structure as in your `mcp_settings.json`.
+The MCP server supports multiple transport methods. You can run it using the same command and argument structure as in your `mcp_settings.json`.
 
-### 1. Run with Node.js (with tsx in global path) (most likely for development)
+### 1. Run with STDIO Transport (Default)
+
+For traditional MCP client integration via stdio (server is launched by MCP client):
 
 ```jsonc
 {
@@ -123,8 +138,72 @@ You can run the MCP server using the same command and argument structure as in y
 }
 ```
 
+### 2. Run with Server-Sent Events (SSE) Transport
 
-### 2. Run with Podman (drop-in docker remplacement)
+For SSE-based MCP communication, you need to run the server separately and then configure the MCP client to connect via URL.
+
+**Step 1: Start the SSE server**
+```bash
+# Start the server with SSE transport
+TRANSPORT=sse PORT=3000 HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> tsx src/index.ts
+
+# Or use the provided script
+HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> ./runSSEServer.sh true sse
+```
+
+**Step 2: Configure MCP client to connect via URL**
+```jsonc
+{
+  "url": "http://localhost:3000/sse",
+  "alwaysAllow": [
+    // your allowed tools here
+  ]
+}
+```
+
+### 3. Run with Streamable HTTP Transport
+
+For HTTP-based MCP communication, you need to run the server separately and then configure the MCP client to connect via URL.
+
+**Step 1: Start the HTTP server**
+```bash
+# Start the server with streamable HTTP transport
+TRANSPORT=streamablehttp PORT=3000 HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> tsx src/index.ts
+```
+
+**Step 2: Configure MCP client to connect via URL**
+```jsonc
+{
+  "url": "http://localhost:3000/mcp",
+  "alwaysAllow": [
+    // your allowed tools here
+  ]
+}
+```
+
+### 4. Quick SSE Server Startup Script
+
+Use the provided shell script for quick SSE server startup:
+
+```bash
+# Set your Home Assistant credentials first
+export HASS_URL=https://your-home-assistant.local:8123
+export HASS_ACCESS_TOKEN=<your_token_here>
+
+# Start SSE server with RESOURCES_TO_TOOLS enabled
+./runSSEServer.sh true sse
+```
+
+Then configure your MCP client with:
+```jsonc
+{
+  "url": "http://localhost:3000/sse"
+}
+```
+
+### 5. Run with Podman/Docker - STDIO Transport
+
+For STDIO transport with containers:
 
 ```jsonc
 {
@@ -143,7 +222,27 @@ You can run the MCP server using the same command and argument structure as in y
 }
 ```
 
+### 6. Run with Podman/Docker - HTTP/SSE Server
 
+For HTTP/SSE transports, run the server separately in a container:
+
+**Step 1: Start the server container**
+```bash
+# For SSE transport
+podman run -p 3000:3000 -e TRANSPORT=sse -e PORT=3000 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> ghcr.io/slhad/aha-mcp
+
+# For HTTP transport  
+podman run -p 3000:3000 -e TRANSPORT=streamablehttp -e PORT=3000 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> ghcr.io/slhad/aha-mcp
+```
+
+**Step 2: Configure MCP client**
+```jsonc
+{
+  "url": "http://localhost:3000/sse",  // for SSE
+  // or
+  "url": "http://localhost:3000/mcp"   // for HTTP
+}
+```
 
 Replace `<your_token_here>` with your actual Home Assistant access token.
 
@@ -153,6 +252,11 @@ The following environment variables can be set to configure the MCP server:
 
 - `HASS_URL` (required): The URL of your Home Assistant instance. Example: `https://your-home-assistant.local:8123` (default in code: `ws://localhost:8123`)
 - `HASS_ACCESS_TOKEN` (required): Long-lived access token for Home Assistant. The server will not start without this.
+- `TRANSPORT`: Transport method to use. Options: `stdio` (default), `sse`, `streamablehttp`. Default: `stdio`.
+  - `stdio`: Traditional MCP client communication via standard input/output
+  - `sse`: Server-Sent Events for web-based MCP communication
+  - `streamablehttp`: HTTP-based streamable MCP communication
+- `PORT`: Port number for HTTP/SSE server modes. Default: `3000`. Only used when `TRANSPORT` is `sse` or `streamablehttp`.
 - `DEBUG`: Set to `true` to enable debug logging. Default: `false`.
 - `RESOURCES_TO_TOOLS`: Set to `true` to enable mapping resources to tools. Default: `false`.
   - **Detailed explanation:**
@@ -173,10 +277,28 @@ npm install
 ```
 
 ### Running the Server
+
+**For STDIO transport (launched by MCP client):**
 ```sh
-# export env varbles before running it
+# Set environment variables and run with npm
 npm start
 ```
+
+**For HTTP/SSE transports (run server separately):**
+```sh
+# Run SSE server on port 3000
+TRANSPORT=sse PORT=3000 npm start
+
+# Run HTTP server on port 8080  
+TRANSPORT=streamablehttp PORT=8080 npm start
+
+# Quick SSE server startup with script
+./runSSEServer.sh true sse
+```
+
+Then configure your MCP client to connect via URL:
+- SSE: `"url": "http://localhost:3000/sse"`
+- HTTP: `"url": "http://localhost:8080/mcp"`
 
 
 ### Running Tests
@@ -189,10 +311,26 @@ npm run test:short
 
 ### Docker Usage
 Build and run the server in a Docker container:
+
 ```sh
+# Build the container
 npm run docker
-docker run -p 3000:3000 aha-mcp
+
+# Run with stdio transport (for traditional MCP client integration)
+docker run -i --rm aha-mcp
+
+# Run HTTP/SSE servers separately for URL-based connections:
+
+# SSE server
+docker run -p 3000:3000 -e TRANSPORT=sse -e PORT=3000 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> aha-mcp
+
+# HTTP server
+docker run -p 8080:8080 -e TRANSPORT=streamablehttp -e PORT=8080 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> aha-mcp
 ```
+
+For HTTP/SSE modes, then configure your MCP client with the appropriate URL:
+- SSE: `"url": "http://localhost:3000/sse"`
+- HTTP: `"url": "http://localhost:8080/mcp"`
 
 ## Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.

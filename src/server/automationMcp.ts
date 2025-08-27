@@ -79,7 +79,7 @@ export class AutomationMcp extends BaseMcp {
                 description: "List all automations",
                 inputSchema: {},
                 mimeType: "application/json",
-                outputSchema: AutomationSchema
+                outputSchema: z.array(AutomationSchema)
             },
             async () => {
                 await this.ensureConnection();

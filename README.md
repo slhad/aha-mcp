@@ -81,6 +81,10 @@ This MCP server provides **comprehensive tools** for interacting with Home Assis
 - **Configuration**: Validate and manage Home Assistant configuration
 - **Registry Access**: Access entity and device registries
 
+> **⚠️ TOKEN COST WARNING**
+>
+> **Important:** Each tool definition consumes tokens in your LLM context, even if unused! Some tools (like `update-lovelace-config`) can cost 4,000+ tokens alone. Consider excluding unnecessary tools to minimize token consumption and maximize conversation efficiency.
+
 For a complete list of all available tools with detailed descriptions and parameters, see the **[Tools Documentation](tools.md)**.
 
 ### Generating Tools Documentation

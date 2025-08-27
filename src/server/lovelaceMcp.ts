@@ -14,7 +14,7 @@ export class LovelaceMcp extends BaseMcp {
                 title: "Get Lovelace Config",
                 description: "Fetch Lovelace dashboard config by url_path. The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-'",
                 inputSchema: {
-                    url_path: z.string().describe("The URL path of the Lovelace dashboard config to fetch, e.g., 'default-view' or 'dashboard-id' \nThe URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-'"),
+                    url_path: z.string().describe("The URL path of the Lovelace dashboard config to fetch, e.g., 'default-view' or 'dashboard-id'. The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-'"),
                     force: z.boolean().optional(),
                 },
                 mimeType: "application/json",

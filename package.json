@@ -23,7 +23,6 @@
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "^1.17.3",
-        "@types/cors": "^2.8.19",
         "cors": "^2.8.5",
         "express": "^5.1.0",
         "home-assistant-js-websocket": "^8.2.0",
@@ -31,6 +30,7 @@
     },
     "devDependencies": {
         "@modelcontextprotocol/inspector": "^0.16.5",
+        "@types/cors": "^2.8.19",
         "@types/express": "^5.0.3",
         "@types/node": "^20.8.0",
         "@typescript-eslint/eslint-plugin": "^6.21.0",

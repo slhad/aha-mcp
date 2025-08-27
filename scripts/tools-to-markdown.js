@@ -66,6 +66,39 @@ try {
         throw new Error('Invalid tools.json format: expected "tools" array');
     }
 
+    // First pass: Calculate token counts for all tools to identify expensive ones
+    const toolsWithTokens = [];
+    for (const tool of toolsData.tools) {
+        const toolJson = JSON.stringify(tool);
+        let tokenCount = 0;
+        try {
+            tokenCount = await countTokens(toolJson);
+        } catch (e) {
+            tokenCount = 0; // Default to 0 if counting fails
+        }
+        toolsWithTokens.push({ ...tool, tokenCount });
+    }
+
+    // Find the most expensive tools (above 1000 tokens)
+    const expensiveTools = toolsWithTokens
+        .filter(tool => tool.tokenCount > 1000)
+        .sort((a, b) => b.tokenCount - a.tokenCount);
+
+    // Generate dynamic warning about expensive tools
+    let expensiveToolsWarning = '';
+    if (expensiveTools.length > 0) {
+        const topTool = expensiveTools[0];
+        expensiveToolsWarning = `- **\`${topTool.name}\` costs ${topTool.tokenCount.toLocaleString('en-US')} tokens** - exclude if not needed for your use case`;
+
+        if (expensiveTools.length > 1) {
+            expensiveToolsWarning += `\n> - Other high-cost tools (1000+ tokens): ${expensiveTools.slice(1, 3).map(t => `\`${t.name}\` (${t.tokenCount.toLocaleString('en-US')})`).join(', ')}`;
+            if (expensiveTools.length > 3) {
+                expensiveToolsWarning += ` and ${expensiveTools.length - 3} more`;
+            }
+        }
+    } else {
+        expensiveToolsWarning = '- Some tools may have higher token costs than others';
+    }
 
     // Generate markdown content
     let markdownContent = `# Home Assistant MCP Server Tools
@@ -74,28 +107,35 @@ This document lists all available tools in the Home Assistant MCP Server.
 
 **Total Tools:** ${toolsData.tools.length}
 
+## ⚠️ **IMPORTANT: Token Usage Warning**
+
+> **🚨 CRITICAL COST CONSIDERATION**
+> 
+> **Each tool and resource definition consumes tokens in your LLM conversation context!**
+> 
+> - All tools listed below are loaded into your conversation and **cost tokens even if unused**
+> - The token counts shown are **approximate estimates** (actual costs may be higher due to formatting)
+> ${expensiveToolsWarning}
+> - Consider carefully which tools you actually need for your specific use case
+> - Unused tools still consume your token budget and may impact conversation length and costs
+>
+> **💡 Pro Tip:** Only include the MCP server tools you'll actually use to minimize token consumption and maximize conversation efficiency.
+
 ## Tools Overview
 
-| ~ Tokens | Tool Name | Title | Description | Required Parameters | Optional Parameters |
-|----------|-----------|-------|-------------|---------------------|---------------------|
+**⚠️ Watch for High Token Cost Tools** - Look for tools with 1000+ tokens in the table below.
+
+| 💰 Token Cost | Tool Name | Title | Description | Required Parameters | Optional Parameters |
+|---------------|-----------|-------|-------------|---------------------|---------------------|
 `;
 
-
-    for (const tool of toolsData.tools) {
+    // Second pass: Generate the table using pre-calculated token counts
+    for (const tool of toolsWithTokens) {
         const requiredParams = extractRequiredParams(tool.inputSchema);
         const optionalParams = extractOptionalParams(tool.inputSchema);
 
-        // Count tokens for the tool declaration (as JSON)
-        const toolJson = JSON.stringify(tool);
-        let tokenCount = 0;
-        try {
-            tokenCount = await countTokens(toolJson);
-        } catch (e) {
-            tokenCount = 'ERR';
-        }
-
         const row = [
-            tokenCount,
+            tool.tokenCount || 0,
             `\`${escapeMarkdown(tool.name)}\``,
             escapeMarkdown(tool.title || ''),
             escapeMarkdown(tool.description || ''),
@@ -109,7 +149,7 @@ This document lists all available tools in the Home Assistant MCP Server.
     // Add detailed section
     markdownContent += `\n## Detailed Tool Descriptions\n\n`;
 
-    toolsData.tools.forEach(tool => {
+    toolsWithTokens.forEach(tool => {
         markdownContent += `### ${escapeMarkdown(tool.title || tool.name)}\n\n`;
         markdownContent += `**Name:** \`${tool.name}\`\n\n`;
 

@@ -1,18 +1,14 @@
 import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
-import { stripSchemaKey } from "../helpers";
 
 export const HassStatusSchema = z.object({
     connected: z.boolean(),
     entityCount: z.number(),
 });
-export const HassStatusJsonSchema = zodToJsonSchema(HassStatusSchema);
 export type HassStatus = z.infer<typeof HassStatusSchema>;
 
 export const DeviceIdResponseSchema = z.object({
     deviceId: z.string(),
 });
-export const DeviceIdResponseJsonSchema = zodToJsonSchema(DeviceIdResponseSchema);
 export type DeviceIdResponse = z.infer<typeof DeviceIdResponseSchema>;
 
 export const EntityRegistryArrayType = z.array(z.object({
@@ -51,10 +47,8 @@ export const EntityStateSchemaPrime = z.object({
         parentId: z.string().optional(),
     }),
 });
-export const EntityStateJsonSchema = zodToJsonSchema(EntityStateSchemaPrime);
 export const EntityStateArraySchema = z.array(EntityStateSchemaPrime);
-export const EntityStateArrayJsonSchema = zodToJsonSchema(EntityStateArraySchema);
-export const EntityStateSchema = EntityStateSchemaPrime.describe(JSON.stringify(EntityStateJsonSchema));
+export const EntityStateSchema = EntityStateSchemaPrime.describe("Home Assistant entity state object with entity ID, state value, attributes, and context information");
 export type EntityState = z.infer<typeof EntityStateSchema>;
 
 export const AutomationSchemaPrime = z.object({
@@ -75,8 +69,7 @@ export const AutomationSchemaPrime = z.object({
         userId: z.string().nullable(),
     }),
 });
-export const AutomationJsonSchema = zodToJsonSchema(AutomationSchemaPrime);
-export const AutomationSchema = AutomationSchemaPrime.describe(JSON.stringify(AutomationJsonSchema));
+export const AutomationSchema = AutomationSchemaPrime.describe("Home Assistant automation entity with state, attributes including automation ID, mode, and execution details");
 export type Automation = z.infer<typeof AutomationSchema>;
 
 export const AutomationRestSchemaPrime = z.object({
@@ -88,13 +81,11 @@ export const AutomationRestSchemaPrime = z.object({
     actions: z.array(z.unknown()),
     mode: z.enum(["single", "parallel", "queued", "restart"]),
 });
-export const AutomationRestJsonSchema = zodToJsonSchema(AutomationRestSchemaPrime);
-export const AutomationRestSchema = AutomationRestSchemaPrime.describe(JSON.stringify(AutomationRestJsonSchema));
+export const AutomationRestSchema = AutomationRestSchemaPrime.describe("Home Assistant automation configuration object with ID, alias, description, triggers, conditions, actions, and execution mode");
 export type AutomationRest = z.infer<typeof AutomationRestSchema>;
 
 export const AutomationCreateRestSchemaPrime = AutomationRestSchemaPrime.omit({ id: true });
-export const AutomationCreateRestJsonSchema = zodToJsonSchema(AutomationCreateRestSchemaPrime);
-export const AutomationCreateRestSchema = AutomationCreateRestSchemaPrime.describe(JSON.stringify(AutomationCreateRestJsonSchema));
+export const AutomationCreateRestSchema = AutomationCreateRestSchemaPrime.describe("Home Assistant automation creation object without ID, used when creating new automations");
 export type AutomationCreateRest = z.infer<typeof AutomationCreateRestSchema>;
 
 export const EntityRegistrySchema = z.object({
@@ -129,8 +120,6 @@ export const EntityRegistrySchema = z.object({
     original_device_class: z.string().nullable(),
     original_icon: z.string().nullable(),
 });
-export const EntityRegistryJsonSchema = zodToJsonSchema(EntityRegistrySchema);
-export const EntityRegistryArrayJsonSchema = zodToJsonSchema(z.array(EntityRegistrySchema));
 export type EntityRegistry = z.infer<typeof EntityRegistrySchema>;
 
 export const ValidateConfigSchemaPrime = z.object({
@@ -138,8 +127,7 @@ export const ValidateConfigSchemaPrime = z.object({
     conditions: z.array(z.unknown()).optional(),
     actions: z.array(z.unknown()).optional(),
 });
-export const ValidateConfigJSONSchema = zodToJsonSchema(ValidateConfigSchemaPrime);
-export const ValidateConfigSchema = ValidateConfigSchemaPrime.describe(JSON.stringify(stripSchemaKey(ValidateConfigJSONSchema)));
+export const ValidateConfigSchema = ValidateConfigSchemaPrime.describe("Validation configuration for Home Assistant automation triggers, conditions, and actions");
 export type ValidateConfig = z.infer<typeof ValidateConfigSchema>;
 
 export const ValidateConfigResponseSchemaPrime = z.object({
@@ -156,8 +144,7 @@ export const ValidateConfigResponseSchemaPrime = z.object({
         errors: z.array(z.string()),
     }).optional(),
 });
-export const ValidateConfigResponseJSONSchema = zodToJsonSchema(ValidateConfigResponseSchemaPrime);
-export const ValidateConfigResponseSchema = ValidateConfigResponseSchemaPrime.describe(JSON.stringify(ValidateConfigResponseJSONSchema));
+export const ValidateConfigResponseSchema = ValidateConfigResponseSchemaPrime.describe("Validation response for Home Assistant automation configuration with validation results and error details");
 export type ValidateConfigResponse = z.infer<typeof ValidateConfigResponseSchema>;
 
 
@@ -195,7 +182,6 @@ export const AutomationRestTraceSchema = z.object({
         user_id: z.string().nullable(),
     }),
 });
-export const AutomationRestTraceJsonSchema = zodToJsonSchema(AutomationRestTraceSchema);
 export type AutomationRestTrace = z.infer<typeof AutomationRestTraceSchema>;
 
 export const AutomationRestShortSchema = z.object({
@@ -212,8 +198,6 @@ export const AutomationRestShortSchema = z.object({
     trigger: z.string(),
 });
 export const AutomationRestShortArraySchema = z.array(AutomationRestShortSchema);
-export const AutomationRestShortArrayJsonSchema = zodToJsonSchema(AutomationRestShortArraySchema);
-export const AutomationRestShortJsonSchema = zodToJsonSchema(AutomationRestShortSchema);
 export type AutomationRestShort = z.infer<typeof AutomationRestShortSchema>;
 
 export const ConfigEntryFlowSchema = z.object({

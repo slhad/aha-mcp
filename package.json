@@ -27,8 +27,7 @@
         "cors": "^2.8.5",
         "express": "^5.1.0",
         "home-assistant-js-websocket": "^8.2.0",
-        "tiktoken": "^1.0.22",
-        "zod-to-json-schema": "^3.24.6"
+        "tiktoken": "^1.0.22"
     },
     "devDependencies": {
         "@modelcontextprotocol/inspector": "^0.16.5",

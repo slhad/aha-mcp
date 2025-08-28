@@ -56,7 +56,7 @@ export const AutomationSchemaPrime = z.object({
     state: z.string(),
     attributes: z.object({
         id: z.string(),
-        last_triggered: z.string(),
+        last_triggered: z.string().nullish(),
         mode: z.string(),
         current: z.number(),
         friendly_name: z.string(),
@@ -65,8 +65,8 @@ export const AutomationSchemaPrime = z.object({
     lastUpdated: z.string(),
     context: z.object({
         id: z.string(),
-        parentId: z.string().nullable(),
-        userId: z.string().nullable(),
+        parentId: z.string().nullish(),
+        userId: z.string().nullish(),
     }),
 });
 export const AutomationSchema = AutomationSchemaPrime.describe("Home Assistant automation entity with state, attributes including automation ID, mode, and execution details");

@@ -1,6 +1,7 @@
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate, ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { HASSClient } from "../hass/hassClient";
 import { ConfigMcpDef } from "../hass/types";
+import { ZodObject, ZodRawShape } from "zod";
 
 export abstract class BaseMcp {
     public server: McpServer;
@@ -25,7 +26,7 @@ export abstract class BaseMcp {
         return this.refClient.ref;
     }
 
-    private transformResourceResultToTool(name: string, result: any) {
+    private transformResourceResultToTool(name: string, result: any, isStructuredContent = false) {
         if (this.options.DEBUG) {
             console.error(`Raw resource ${name}:`, JSON.stringify(result, undefined, 0));
         }
@@ -39,7 +40,10 @@ export abstract class BaseMcp {
         content.type = "text";
         delete content.uri;
         delete content.mimeType;
-        const final = {
+        const final = isStructuredContent ? {
+            structuredContent: JSON.parse(content.text),
+            content: [content]
+        } : {
             content: [content]
         };
         if (this.options.DEBUG) {
@@ -48,13 +52,17 @@ export abstract class BaseMcp {
         return final;
     }
 
-    registerResourceOrTool(
+    registerResourceOrTool<InputArgs extends ZodRawShape, OutputArgs extends ZodRawShape>(
         name: string,
         templateOrUri: string | ResourceTemplate,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        options: any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handler: (...args: any[]) => Promise<any>
+        options: {
+            title: string;
+            mimeType: string;
+            description: string;
+            inputSchema?: InputArgs;
+            outputSchema?: OutputArgs;
+        },
+        handler: (...args: any[]) => any
     ) {
         if (this.options.LIMIT_RESOURCES === 0) {
             console.error(`Warning: Limit reached for resources, cannot register ${name}`);
@@ -74,13 +82,13 @@ export abstract class BaseMcp {
                     title: options.title,
                     description: options.description,
                     inputSchema: options.inputSchema,
-                    outputSchema: options.outputSchema?.shape ? options.outputSchema.shape : undefined,
+                    outputSchema: options.outputSchema
                 },
-                async (args: Record<string, unknown>) => {
+                (async (args: any) => {
                     const firstArg = typeof templateOrUri === "string" ? undefined : new URL("http://dummy/" + name);
                     const result = await handler(firstArg, args);
-                    return this.transformResourceResultToTool(name, result);
-                }
+                    return this.transformResourceResultToTool(name, result, !!options.outputSchema);
+                }) as any
             );
         } else {
             this.server.registerResource(name, templateOrUri as string, options, handler);

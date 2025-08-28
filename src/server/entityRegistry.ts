@@ -14,7 +14,7 @@ export class EntityRegistry extends BaseMcp {
                 description: "Get registry info for a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: "application/json",
-                outputSchema: EntityRegistrySchema
+                outputSchema: { registry: EntityRegistrySchema }
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();
@@ -23,7 +23,7 @@ export class EntityRegistry extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(registry),
+                            text: JSON.stringify({ registry }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -40,7 +40,7 @@ export class EntityRegistry extends BaseMcp {
                 description: "Get the device_id for a given entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: "application/json",
-                outputSchema: DeviceIdResponseSchema
+                outputSchema: { DeviceIdResponseSchema }
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();

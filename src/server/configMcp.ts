@@ -12,9 +12,8 @@ export class ConfigMcp extends BaseMcp {
             {
                 title: "Get Home Assistant connection status",
                 description: "Get Home Assistant connection status",
-                inputSchema: {},
                 mimeType: "application/json",
-                outputSchema: HassStatusSchema
+                outputSchema: { status: HassStatusSchema }
             },
             async () => {
                 await this.ensureConnection();
@@ -24,8 +23,10 @@ export class ConfigMcp extends BaseMcp {
                         {
                             uri: "config://status",
                             text: JSON.stringify({
-                                connected: true,
-                                entityCount: states.length,
+                                status: {
+                                    connected: true,
+                                    entityCount: states.length,
+                                }
                             }),
                             mimeType: "application/json",
                             _meta: {},
@@ -94,8 +95,7 @@ export class ConfigMcp extends BaseMcp {
                 title: "Get Home Assistant integration manifest",
                 description: "Get the manifest of a Home Assistant integration",
                 inputSchema: { integration: z.string().describe("Integration name, e.g. 'light'") },
-                mimeType: "application/json",
-                outputSchema: undefined
+                mimeType: "application/json"
             },
             async (uri: URL, { integration }) => {
                 await this.ensureConnection();
@@ -104,7 +104,7 @@ export class ConfigMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(manifest),
+                            text: JSON.stringify({ manifest }),
                             mimeType: "application/json",
                             _meta: {},
                         }

@@ -25,7 +25,7 @@ export class AutomationMcp extends BaseMcp {
                     run_id: z.string().describe("Automation run id"),
                 },
                 mimeType: "application/json",
-                outputSchema: AutomationRestTraceSchema
+                outputSchema: { trace: AutomationRestTraceSchema },
             },
             async (uri: URL, { rest_id, run_id }) => {
                 await this.ensureConnection();
@@ -34,7 +34,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(trace),
+                            text: JSON.stringify({ trace }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -53,7 +53,7 @@ export class AutomationMcp extends BaseMcp {
                     rest_id: z.string().describe("Automation REST API id"),
                 },
                 mimeType: "application/json",
-                outputSchema: AutomationRestShortArraySchema
+                outputSchema: { traces: AutomationRestShortArraySchema }
             },
             async (uri: URL, { rest_id }) => {
                 await this.ensureConnection();
@@ -62,7 +62,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(traces),
+                            text: JSON.stringify({ traces }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -77,9 +77,8 @@ export class AutomationMcp extends BaseMcp {
             {
                 title: "List all automations",
                 description: "List all automations",
-                inputSchema: {},
                 mimeType: "application/json",
-                outputSchema: z.array(AutomationSchema)
+                outputSchema: { automations: z.array(AutomationSchema) }
             },
             async () => {
                 await this.ensureConnection();
@@ -88,7 +87,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: "automation://list",
-                            text: JSON.stringify(automations),
+                            text: JSON.stringify({ automations }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -120,7 +119,7 @@ export class AutomationMcp extends BaseMcp {
                 description: "Find an automation entity using its entity_id (e.g. automation.my_automation).",
                 inputSchema: { entity_id: z.string().describe("Automation entity_id, e.g. 'automation.my_automation'") },
                 mimeType: "application/json",
-                outputSchema: AutomationSchema
+                outputSchema: { automation: AutomationSchema }
             },
             async (uri: URL, { entity_id }) => {
                 await this.ensureConnection();
@@ -129,7 +128,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(automation),
+                            text: JSON.stringify({ automation }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -146,7 +145,7 @@ export class AutomationMcp extends BaseMcp {
                 description: "Get an automation's REST definition using its entity_id (e.g. automation.my_automation).",
                 inputSchema: { entity_id: z.string().describe("Automation entity_id, e.g. 'automation.my_automation'") },
                 mimeType: "application/json",
-                outputSchema: AutomationRestSchema
+                outputSchema: { automation: AutomationRestSchema }
             },
             async (uri: URL, { entity_id }) => {
                 await this.ensureConnection();
@@ -155,7 +154,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(automation),
+                            text: JSON.stringify({ automation }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -191,7 +190,7 @@ export class AutomationMcp extends BaseMcp {
                 description: "Find an automation entity using its REST API id (rest_id, not entity_id).",
                 inputSchema: { rest_id: z.string().describe("Automation REST API id") },
                 mimeType: "application/json",
-                outputSchema: AutomationSchema
+                outputSchema: { automation: AutomationSchema }
             },
             async (uri: URL, { rest_id }) => {
                 await this.ensureConnection();
@@ -200,7 +199,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(automation),
+                            text: JSON.stringify({ automation }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -217,7 +216,7 @@ export class AutomationMcp extends BaseMcp {
                 description: "Get an automation's REST definition using its rest_id (REST API id, not entity_id).",
                 inputSchema: { rest_id: z.string().describe("Automation REST API id") },
                 mimeType: "application/json",
-                outputSchema: AutomationRestSchema
+                outputSchema: { automation: AutomationRestSchema }
             },
             async (uri: URL, { rest_id }) => {
                 await this.ensureConnection();
@@ -226,7 +225,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(automation),
+                            text: JSON.stringify({ automation }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -286,8 +285,7 @@ export class AutomationMcp extends BaseMcp {
                 title: "List device automation triggers",
                 description: "List all triggers for a specific device's automations.",
                 inputSchema: { device_id: z.string().describe("Device ID") },
-                mimeType: "application/json",
-                outputSchema: undefined
+                mimeType: "application/json"
             },
             async (uri: URL, { device_id }) => {
                 await this.ensureConnection();
@@ -296,7 +294,7 @@ export class AutomationMcp extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(triggers),
+                            text: JSON.stringify({ triggers }),
                             mimeType: "application/json",
                             _meta: {},
                         }

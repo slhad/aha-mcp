@@ -13,7 +13,7 @@ export class Entities extends BaseMcp {
                 description: "List all Home Assistant entities by prefix",
                 inputSchema: { prefix: z.string().describe("Prefix to filter entities, e.g. 'sensor.'") },
                 mimeType: "application/json",
-                outputSchema: EntityStateArraySchema
+                outputSchema: { entities: EntityStateArraySchema }
             },
             async (uri: URL, { prefix }) => {
                 await this.ensureConnection();
@@ -22,7 +22,7 @@ export class Entities extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(entities),
+                            text: JSON.stringify({ entities }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -42,7 +42,7 @@ export class Entities extends BaseMcp {
                     flags: z.string().describe("Regex flags, e.g. 'i' for ignore case")
                 },
                 mimeType: "application/json",
-                outputSchema: EntityStateArraySchema
+                outputSchema: { entities: EntityStateArraySchema }
             },
             async (uri: URL, { pattern, flags }) => {
                 await this.ensureConnection();
@@ -57,7 +57,7 @@ export class Entities extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(entities),
+                            text: JSON.stringify({ entities }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -74,7 +74,7 @@ export class Entities extends BaseMcp {
                 description: "Get state of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: "application/json",
-                outputSchema: EntityStateSchema
+                outputSchema: { state: EntityStateSchema }
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();
@@ -85,7 +85,7 @@ export class Entities extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(state),
+                            text: JSON.stringify({ state }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -102,7 +102,7 @@ export class Entities extends BaseMcp {
                 description: "Get domain of a specific entity_id",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: "application/json",
-                outputSchema: EntityStateArraySchema
+                outputSchema: { domain: z.string() }
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();
@@ -111,7 +111,7 @@ export class Entities extends BaseMcp {
                     contents: [
                         {
                             uri: uri.toString(),
-                            text: JSON.stringify(domain),
+                            text: JSON.stringify({ domain }),
                             mimeType: "application/json",
                             _meta: {},
                         }
@@ -131,7 +131,7 @@ export class Entities extends BaseMcp {
                     itemId: z.string().describe("ID of the item, e.g. 'sensor.temperature' or 'area.living_room'")
                 },
                 mimeType: "application/json",
-                outputSchema: EntityStateArraySchema
+                outputSchema: { entities: EntityStateSchema }
             },
             async (uri: URL, { itemType, itemId }) => {
                 await this.ensureConnection();
@@ -139,7 +139,7 @@ export class Entities extends BaseMcp {
                 return {
                     contents: Object.entries(relatedEntities).map(([key, entities]) => ({
                         uri: `entity://search/related/${key}/${itemId}`,
-                        text: JSON.stringify(entities),
+                        text: JSON.stringify({ entities }),
                         mimeType: "application/json",
                         _meta: {},
                     })),
@@ -153,9 +153,7 @@ export class Entities extends BaseMcp {
             {
                 title: "List all areas",
                 description: "List all Home Assistant areas",
-                inputSchema: {},
-                mimeType: "application/json",
-                outputSchema: undefined
+                mimeType: "application/json"
             },
             async () => {
                 const areas = await this.client!.listAreas();

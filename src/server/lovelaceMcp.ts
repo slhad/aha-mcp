@@ -17,8 +17,7 @@ export class LovelaceMcp extends BaseMcp {
                     url_path: z.string().describe("The URL path of the Lovelace dashboard config to fetch, e.g., 'default-view' or 'dashboard-id'. The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-'"),
                     force: z.boolean().optional(),
                 },
-                mimeType: "application/json",
-                outputSchema: undefined
+                mimeType: "application/json"
             },
             async (_uri, { url_path, force }) => {
                 await this.ensureConnection();
@@ -73,9 +72,7 @@ export class LovelaceMcp extends BaseMcp {
             {
                 title: "List Lovelace Dashboards",
                 description: "List all Lovelace dashboards.",
-                inputSchema: undefined,
-                mimeType: "application/json",
-                outputSchema: undefined
+                mimeType: "application/json"
             },
             async () => {
                 await this.ensureConnection();
@@ -141,9 +138,7 @@ export class LovelaceMcp extends BaseMcp {
             {
                 title: "Get Lovelace Resources",
                 description: "Fetch Lovelace resources.",
-                inputSchema: undefined,
-                mimeType: "application/json",
-                outputSchema: undefined
+                mimeType: "application/json"
             },
             async () => {
                 await this.ensureConnection();

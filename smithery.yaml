@@ -1,0 +1,91 @@
+# Smithery.ai configuration for Home Assistant MCP Server
+startCommand:
+    type: stdio # Specifies the server communicates over standard input/output
+    configSchema:
+        # JSON Schema defining the configuration options users need to provide
+        type: object
+        required:
+            - hassUrl
+            - hassAccessToken
+        properties:
+            # Home Assistant Connection Config
+            hassUrl:
+                type: string
+                description: "Base URL for your Home Assistant instance (e.g., https://your-home-assistant.local:8123)."
+                default: "http://localhost:8123"
+            hassAccessToken:
+                type: string
+                description: "Long-lived access token for Home Assistant authentication. You can generate this in Home Assistant under Profile > Security > Long-lived access tokens."
+                format: password # Hides the value in UI inputs
+
+            # Transport and Server Config
+            transport:
+                type: string
+                description: "Transport method to use for MCP communication."
+                enum: ["stdio", "sse", "streamablehttp"]
+                default: "stdio"
+            port:
+                type: integer
+                description: "Port number for HTTP/SSE server modes (only used when transport is 'sse' or 'streamablehttp')."
+                default: 3000
+                minimum: 1
+                maximum: 65535
+
+            # Feature Toggles
+            debugMode:
+                type: boolean
+                description: "Enable debug logging for troubleshooting."
+                default: false
+            resourcesToTools:
+                type: boolean
+                description: "Enable mapping Home Assistant resources (entities, automations, services) as individual MCP tools. Useful for clients that can only interact via tool-based interfaces."
+                default: true
+            limitResources:
+                type: integer
+                description: "Limit the number of resources returned by the server. Set to -1 for unlimited."
+                default: -1
+                minimum: -1
+        additionalProperties: false # Disallow properties not defined above
+
+    commandFunction:
+        # A JavaScript function that produces the CLI command and environment variables
+        # needed to start the MCP server, based on the user's configuration.
+        |-
+        (config) => {
+          // The command matches the npm start script or tsx execution
+          const command = 'tsx';
+          const args = ['src/index.ts']; // Entry point for the Home Assistant MCP server
+          
+          // Map the config schema properties to the environment variables
+          const env = {
+            // Home Assistant Connection
+            HASS_URL: config.hassUrl,
+            HASS_ACCESS_TOKEN: config.hassAccessToken,
+            
+            // Transport Configuration
+            TRANSPORT: config.transport || 'stdio',
+            PORT: config.port !== undefined ? String(config.port) : '3000',
+            
+            // Feature Flags
+            DEBUG: config.debugMode !== undefined ? String(config.debugMode) : 'false',
+            RESOURCES_TO_TOOLS: config.resourcesToTools !== undefined ? String(config.resourcesToTools) : 'true',
+            LIMIT_RESOURCES: config.limitResources !== undefined ? String(config.limitResources) : '-1',
+            
+            // Node.js Environment
+            NODE_ENV: 'production'
+          };
+          
+          // Filter out undefined/null env variables
+          const filteredEnv = Object.entries(env)
+            .filter(([key, value]) => value !== undefined && value !== null)
+            .reduce((obj, [key, value]) => {
+              obj[key] = value;
+              return obj;
+            }, {});
+          
+          return {
+            command: command,
+            args: args,
+            env: filteredEnv
+          };
+        }

@@ -6,5 +6,4 @@ dist/
 *.log
 coverage/
 *.tsbuildinfo
-.vscode/
 tests/hass-real-config.ts

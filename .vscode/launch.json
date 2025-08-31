@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "inputs": [
+        {
+            "id": "HASS_ACCESS_TOKEN",
+            "description": "Home Assistant Access Token",
+            "type": "promptString"
+        },
+        {
+            "id": "HASS_URL",
+            "description": "Home Assistant URL",
+            "type": "promptString"
+        }
+    ],
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "SSE",
+            "runtimeExecutable": "tsx",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "src/index.ts"
+            ],
+            "env": {
+                "RESOURCES_TO_TOOLS": "true",
+                "TRANSPORT": "sse",
+                "DEBUG": "true",
+                "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
+                "HASS_URL": "${input:HASS_URL}"
+            }
+        }
+    ]
+}

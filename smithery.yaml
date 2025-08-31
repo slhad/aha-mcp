@@ -1,6 +1,7 @@
 # Smithery.ai configuration for Home Assistant MCP Server
+runtime: container
 startCommand:
-    type: stdio # Specifies the server communicates over standard input/output
+    type: http # Specifies the server communicates over standard input/output
     configSchema:
         # JSON Schema defining the configuration options users need to provide
         type: object
@@ -23,7 +24,7 @@ startCommand:
                 type: string
                 description: "Transport method to use for MCP communication."
                 enum: ["stdio", "sse", "streamablehttp"]
-                default: "stdio"
+                default: "streamablehttp"
             port:
                 type: integer
                 description: "Port number for HTTP/SSE server modes (only used when transport is 'sse' or 'streamablehttp')."
@@ -45,6 +46,11 @@ startCommand:
                 description: "Limit the number of resources returned by the server. Set to -1 for unlimited."
                 default: -1
                 minimum: -1
+            inspect:
+                type: boolean
+                description: "Enable inspection of the mcp tools and resources."
+                default: true
+
         additionalProperties: false # Disallow properties not defined above
 
     commandFunction:
@@ -70,7 +76,8 @@ startCommand:
             DEBUG: config.debugMode !== undefined ? String(config.debugMode) : 'false',
             RESOURCES_TO_TOOLS: config.resourcesToTools !== undefined ? String(config.resourcesToTools) : 'true',
             LIMIT_RESOURCES: config.limitResources !== undefined ? String(config.limitResources) : '-1',
-            
+            INSPECT: config.inspect !== undefined ? String(config.inspect) : 'false',
+
             // Node.js Environment
             NODE_ENV: 'production'
           };

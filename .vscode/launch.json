@@ -29,6 +29,23 @@
                 "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
                 "HASS_URL": "${input:HASS_URL}"
             }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Streamablehttp",
+            "runtimeExecutable": "tsx",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "src/index.ts"
+            ],
+            "env": {
+                "RESOURCES_TO_TOOLS": "true",
+                "TRANSPORT": "streamablehttp",
+                "DEBUG": "true",
+                "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
+                "HASS_URL": "${input:HASS_URL}"
+            }
         }
     ]
 }

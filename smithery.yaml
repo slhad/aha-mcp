@@ -46,10 +46,6 @@ startCommand:
                 description: "Limit the number of resources returned by the server. Set to -1 for unlimited."
                 default: -1
                 minimum: -1
-            inspect:
-                type: boolean
-                description: "Enable inspection of the mcp tools and resources."
-                default: true
 
         additionalProperties: false # Disallow properties not defined above
 
@@ -76,7 +72,6 @@ startCommand:
             DEBUG: config.debugMode !== undefined ? String(config.debugMode) : 'false',
             RESOURCES_TO_TOOLS: config.resourcesToTools !== undefined ? String(config.resourcesToTools) : 'true',
             LIMIT_RESOURCES: config.limitResources !== undefined ? String(config.limitResources) : '-1',
-            INSPECT: config.inspect !== undefined ? String(config.inspect) : 'false',
 
             // Node.js Environment
             NODE_ENV: 'production'

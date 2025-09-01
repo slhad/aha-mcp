@@ -17,7 +17,7 @@
         "test:short": "vitest --run --silent --no-color --hideSkippedTests  --reporter=default",
         "check": "tsc --noEmit",
         "format": "eslint --fix .",
-        "extracttools": "cross-env INSPECT=true RESOURCES_TO_TOOLS=true npx @modelcontextprotocol/inspector --cli tsx src/index.ts --method tools/list > tools.json",
+        "extracttools": "cross-env RESOURCES_TO_TOOLS=true npx @modelcontextprotocol/inspector --cli tsx src/index.ts --method tools/list > tools.json",
         "tools-to-md": "node scripts/tools-to-markdown.js",
         "generate-docs": "npm run extracttools && npm run tools-to-md"
     },

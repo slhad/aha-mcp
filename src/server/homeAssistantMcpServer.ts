@@ -54,16 +54,12 @@ export class HomeAssistantMCPServer {
     }
 
     private async ensureConnection() {
-        if (process.env.INSPECT === "true") {
-            return;
-        }
         if (!this.client.ref) {
             this.client.ref = await HASSClient.create(this.config);
         }
     }
 
     async start() {
-        await this.ensureConnection();
         const transport = new StdioServerTransport();
         await this.server.connect(transport);
         if (this.config.debugMode) {

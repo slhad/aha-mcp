@@ -13,11 +13,6 @@ const config: HASSConfig = {
     port: process.env.PORT ? parseInt(process.env.PORT) : 3000
 };
 
-if (!config.accessToken && process.env.INSPECT !== "true") {
-    console.error("Missing HASS_ACCESS_TOKEN");
-    process.exit(1);
-}
-
 if (!config.transport || config.transport === "stdio") {
     new HomeAssistantMCPServer(config).start().catch((error) => {
         console.error("Server error:", error);

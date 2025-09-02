@@ -1,6 +1,6 @@
 {
     "name": "hass-mcp",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "description": "Home Assistant MCP Server",
     "main": "src/index.ts",
     "type": "module",

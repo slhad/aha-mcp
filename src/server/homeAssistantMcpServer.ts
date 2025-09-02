@@ -10,20 +10,40 @@ import { ConfigMcp } from "./configMcp.js";
 import { Entities } from "./entites.js";
 import { EntityRegistry } from "./entityRegistry.js";
 import { LovelaceMcp } from "./lovelaceMcp.js";
+import { HassConfig } from "home-assistant-js-websocket";
+
+const servers: Record<string, HomeAssistantMCPServer> = {};
+
+// That's smithery for you, trust your keys and tokens in the base64 on there network !
+function parseConfig(req: Request) {
+    const url = new URL(req.url);
+    const configParam = url.searchParams.get('config');
+    if (configParam) {
+        return JSON.parse(Buffer.from(configParam, 'base64').toString());
+    }
+    return {};
+}
 
 export class HomeAssistantMCPServer {
     private client: { ref: HASSClient, ensureConnection: () => Promise<void> };
     private server: McpServer;
     private mcps: BaseMcp[] = [];
+    private configUpdated = false;
 
-    getServer() {
-        return this.server;
+    static getServer(sessionId: string, config?: HASSConfig) {
+        if (!servers[sessionId]) {
+            if (!config) {
+                console.warn("No config provided for new server with session ID: " + sessionId);
+            }
+            servers[sessionId] = new HomeAssistantMCPServer(config || {} as HASSConfig);
+        }
+        return servers[sessionId].server;
     }
 
     constructor(private config: HASSConfig) {
 
         // That's for the late initialization, yes it's ugly by ref
-        this.client = { ref: undefined as unknown as HASSClient, ensureConnection: this.ensureConnection.bind(this) };
+        this.client = { ref: undefined as unknown as HASSClient, ensureConnection: this.ensureConnection.bind(this, config) };
 
         if (this.config.debugMode) {
             const obfuscatedConfig = JSON.parse(JSON.stringify(this.config));
@@ -53,7 +73,16 @@ export class HomeAssistantMCPServer {
         this.mcps.forEach((mcp) => mcp.register());
     }
 
-    private async ensureConnection() {
+    private async ensureConnection(request: any) {
+        if (request && !this.configUpdated) {
+            this.configUpdated = true;
+            const config: HassConfig = parseConfig(request);
+            this.config = { ...this.config, ...config };
+            if (this.config.debugMode) {
+                console.error("Home Assistant MCP Server configuration updated:", this.config);
+            }
+            this.client.ref = await HASSClient.create(this.config);
+        }
         if (!this.client.ref) {
             this.client.ref = await HASSClient.create(this.config);
         }

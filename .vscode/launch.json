@@ -44,7 +44,8 @@
                 "TRANSPORT": "streamablehttp",
                 "DEBUG": "true",
                 "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
-                "HASS_URL": "${input:HASS_URL}"
+                "HASS_URL": "${input:HASS_URL}",
+                "PORT": "8081"
             }
         }
     ]

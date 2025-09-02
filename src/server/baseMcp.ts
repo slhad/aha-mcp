@@ -5,14 +5,14 @@ import { ZodObject, ZodRawShape } from "zod";
 
 export abstract class BaseMcp {
     public server: McpServer;
-    public refClient: { ref: HASSClient, ensureConnection: () => Promise<void> };
+    public refClient: { ref: HASSClient, ensureConnection: (request: any) => Promise<void> };
     public options: ConfigMcpDef;
 
     abstract register(): void;
 
     constructor(
         server: McpServer,
-        refClient: { ref: HASSClient, ensureConnection: () => Promise<void> },
+        refClient: { ref: HASSClient, ensureConnection: (request: any) => Promise<void> },
         options: ConfigMcpDef
     ) {
         this.server = server;
@@ -20,7 +20,7 @@ export abstract class BaseMcp {
         this.options = options;
     }
 
-    ensureConnection = () => this.refClient.ensureConnection();
+    ensureConnection = (request?: any) => this.refClient.ensureConnection(request);
 
     get client() {
         return this.refClient.ref;

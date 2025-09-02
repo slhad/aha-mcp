@@ -74,8 +74,8 @@ export class LovelaceMcp extends BaseMcp {
                 description: "List all Lovelace dashboards.",
                 mimeType: "application/json"
             },
-            async () => {
-                await this.ensureConnection();
+            async (_, { request }) => {
+                await this.ensureConnection(request);
                 const dashboards = await this.client.listLovelaceDashboards();
                 const contents = Array.isArray(dashboards)
                     ? dashboards.map((dashboard) => ({

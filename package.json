@@ -26,7 +26,8 @@
         "cors": "^2.8.5",
         "express": "^5.1.0",
         "home-assistant-js-websocket": "^8.2.0",
-        "tiktoken": "^1.0.22"
+        "tiktoken": "^1.0.22",
+        "tsx": "^4.20.5"
     },
     "devDependencies": {
         "@modelcontextprotocol/inspector": "^0.16.5",
@@ -37,7 +38,6 @@
         "@typescript-eslint/parser": "^6.21.0",
         "cross-env": "^10.0.0",
         "eslint": "^8.57.1",
-        "tsx": "^4.7.0",
         "typescript": "^5.2.2",
         "vitest": "^3.2.4"
     },

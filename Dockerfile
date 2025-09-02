@@ -8,13 +8,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy source code
 COPY . .
 
 # Set environment variables
-ENV NODE_ENV=production
+ENV NODE_ENV=production PORT=8081 TRANSPORT=streamablehttp RESOURCES_TO_TOOLS=true
 
 # Start the server
-CMD ["npm", "run", "start"]
+CMD ["./node_modules/.bin/tsx", "."]

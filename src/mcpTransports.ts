@@ -11,8 +11,6 @@ export async function startStreamableHttpServer(config: HASSConfig) {
     const app = express();
     app.use(express.json());
 
-    const mcpServer = new HomeAssistantMCPServer(config);
-
     const transports: Record<string, StreamableHTTPServerTransport> = {};
 
     app.post("/mcp", async (req: Request, res: Response) => {
@@ -30,7 +28,7 @@ export async function startStreamableHttpServer(config: HASSConfig) {
             transport.onclose = () => {
                 if (transport.sessionId) delete transports[transport.sessionId];
             };
-            await mcpServer.getServer().connect(transport);
+            await HomeAssistantMCPServer.getServer(transport.sessionId!, config).connect(transport);
         }
         await transport.handleRequest(req, res, req.body);
     });
@@ -57,8 +55,8 @@ export async function startStreamableHttpServer(config: HASSConfig) {
 
     app.use(cors({
         origin: '*',
-        exposedHeaders: ['mcp-session-id'],
-        allowedHeaders: ['Content-Type', 'mcp-session-id'],
+        exposedHeaders: ['mcp-session-id', 'mcp-protocol-version'],
+        allowedHeaders: ['Content-Type', 'mcp-session-id', 'Authorization']
     }));
 
     app.listen(config.port, () => {
@@ -70,7 +68,6 @@ export async function startSseServer(config: HASSConfig) {
     const app = express();
     app.use(express.json());
 
-    const mcpServer = new HomeAssistantMCPServer(config);
     const transports: Record<string, SSEServerTransport> = {};
 
     app.get("/sse", async (req: Request, res: Response) => {
@@ -79,7 +76,7 @@ export async function startSseServer(config: HASSConfig) {
         res.on("close", () => {
             delete transports[transport.sessionId];
         });
-        await mcpServer.getServer().connect(transport);
+        await HomeAssistantMCPServer.getServer(transport.sessionId, config).connect(transport);
     });
 
     app.post("/messages", async (req: Request, res: Response) => {

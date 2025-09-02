@@ -1,6 +1,7 @@
 ---
 description: "Version bump assistant - bump package version and create Git tag"
 mode: agent
+model: Claude Sonnet 4
 ---
 
 # Version Bump Assistant

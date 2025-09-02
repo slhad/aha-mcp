@@ -118,16 +118,17 @@ echo "$notes" > release_notes.md
 
 - Read the generated release notes with runCommands tool
 - Create a concise oneliner summary title from the detailed notes.
-- Write it to a file or output variable.
+- Write it to file "release_summary.md"
 
 ## Step 5: Create release
 
 Use the summary generated from the detailed notes and notes to create the release with the new tag.
 
 ```bash
-gh release create "$new" --title "$summary" --notes "$(< release_notes.md)" --latest
+gh release create "$new" --title "$(< release_summary.md)" --notes "$(< release_notes.md)" --latest
 echo "Successfully bumped version from $old to $new, pushed to remote, and created GitHub release!"
 rm release_notes.md
+rm release_summary.md
 ```
 
 ## Step 6: Confirm Success

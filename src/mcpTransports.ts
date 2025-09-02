@@ -9,6 +9,11 @@ import cors from "cors";
 
 export async function startStreamableHttpServer(config: HASSConfig) {
     const app = express();
+    app.use(cors({
+        origin: '*',
+        exposedHeaders: ['mcp-session-id', 'mcp-protocol-version'],
+        allowedHeaders: ['Content-Type', 'mcp-session-id', 'Authorization', 'mcp-protocol-version']
+    }));
     app.use(express.json());
 
     const transports: Record<string, StreamableHTTPServerTransport> = {};
@@ -52,12 +57,6 @@ export async function startStreamableHttpServer(config: HASSConfig) {
         const transport = transports[sessionId];
         await transport.handleRequest(req, res);
     });
-
-    app.use(cors({
-        origin: '*',
-        exposedHeaders: ['mcp-session-id', 'mcp-protocol-version'],
-        allowedHeaders: ['Content-Type', 'mcp-session-id', 'Authorization']
-    }));
 
     app.listen(config.port, () => {
         console.log(`MCP Streamable HTTP Server listening on port ${config.port}`);

@@ -1,6 +1,15 @@
 # AHA Model Context Protocol (MCP) Server
 
-**AHA stands for Another Home Assistant MCP Server.**
+## Quick install links
+**STDIO**
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_AHA--MCP-0098FF?style=for-the-badge&logo=visualstudiocode&logoColor=ffffff)](vscode:mcp/install?%7B%22name%22%3A%22aha-mcp%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22run%22%2C%22--pull%22%2C%22always%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22TRANSPORT%3Dstdio%22%2C%22-e%22%2C%22RESOURCES_TO_TOOLS%3Dtrue%22%2C%22-e%22%2C%22HASS_URL%22%2C%22-e%22%2C%22HASS_ACCESS_TOKEN%22%2C%22ghcr.io%2Fslhad%2Faha-mcp%3Alatest%22%5D%2C%22env%22%3A%7B%22HASS_ACCESS_TOKEN%22%3A%22%24%7Binput%3AHASS_ACCESS_TOKEN%7D%22%2C%22HASS_URL%22%3A%22%24%7Binput%3AHASS_URL%7D%22%7D%7D)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=aha-mcp&config=eyJjb21tYW5kIjoiZG9ja2VyIHJ1biAtLXB1bGwgYWx3YXlzIC1pIC0tcm0gLWUgVFJBTlNQT1JUPXN0ZGlvIC1lIFJFU09VUkNFU19UT19UT09MUz10cnVlIC1lIEhBU1NfVVJMPWh0dHBzOi8vaGFfaW5zdGFuY2UgLWUgSEFTU19BQ0NFU1NfVE9LRU49aGFfbG9uZ19saXZlZF9hY2Nlc3NfdG9rZW4gZ2hjci5pby9zbGhhZC9haGEtbWNwOmxhdGVzdCJ9)
+
+**Others**
+[![smithery badge](https://smithery.ai/badge/@slhad/aha-mcp)](https://smithery.ai/server/@slhad/aha-mcp)
+Thanks to https://vscodemcp.com/ && https://docs.cursor.com/en/tools/developers
+
+## AHA stands for Another Home Assistant MCP Server
 
 
 This repository implements a Model Context Protocol (MCP) server for Home Assistant, providing a bridge between Home Assistant and MCP clients.
@@ -25,6 +34,8 @@ The server supports multiple transport methods:
 ## Table of Contents
 
 - [AHA Model Context Protocol (MCP) Server](#aha-model-context-protocol-mcp-server)
+  - [Quick install links](#quick-install-links)
+  - [AHA stands for Another Home Assistant MCP Server](#aha-stands-for-another-home-assistant-mcp-server)
   - [Table of Contents](#table-of-contents)
   - [Motivation](#motivation)
   - [Features](#features)
@@ -216,10 +227,12 @@ For STDIO transport with containers:
     "-i",
     "--rm",
     "-e",
+    "TRANSPORT=stdio",
+    "-e",
     "HASS_URL=https://your-home-assistant.local:8123",
     "-e",
     "HASS_ACCESS_TOKEN=<your_token_here>",
-    "ghcr.io/slhad/aha-mcp"
+    "ghcr.io/slhad/aha-mcp:latest"
   ]
 }
 ```
@@ -315,22 +328,16 @@ Build and run the server in a Docker container:
 ```sh
 # Build the container
 npm run docker
-
-# Run with stdio transport (for traditional MCP client integration)
-docker run -i --rm aha-mcp
-
-# Run HTTP/SSE servers separately for URL-based connections:
-
-# SSE server
-docker run -p 3000:3000 -e TRANSPORT=sse -e PORT=3000 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> aha-mcp
-
-# HTTP server
-docker run -p 8080:8080 -e TRANSPORT=streamablehttp -e PORT=8080 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> aha-mcp
 ```
 
+then follow :
+
+ - [Stdio](#5-run-with-podmandocker---stdio-transport)
+ - [HTTP/SSE](#6-run-with-podmandocker---httpsse-server)
+  
 For HTTP/SSE modes, then configure your MCP client with the appropriate URL:
 - SSE: `"url": "http://localhost:3000/sse"`
-- HTTP: `"url": "http://localhost:8080/mcp"`
+- HTTP: `"url": "http://localhost:8081/mcp"`
 
 ## Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.

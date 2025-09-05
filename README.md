@@ -3,7 +3,7 @@
 ## Quick install links
 **STDIO**  
 
-[Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%22aha-mcp%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22--pull%22%2C%22always%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22TRANSPORT%3Dstdio%22%2C%22-e%22%2C%22RESOURCES_TO_TOOLS%3Dtrue%22%2C%22-e%22%2C%22HASS_URL%22%2C%22-e%22%2C%22HASS_ACCESS_TOKEN%22%2C%22ghcr.io%2Fslhad%2Faha-mcp%3Alatest%22%5D%2C%22env%22%3A%7B%22HASS_ACCESS_TOKEN%22%3A%22%24%7Binput%3AHASS_ACCESS_TOKEN%7D%22%2C%22HASS_URL%22%3A%22%24%7Binput%3AHASS_URL%7D%22%7D%7D)
+[Install in VS Code](https//:mcp/install?%7B%22name%22%3A%22aha-mcp%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22--pull%22%2C%22always%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22TRANSPORT%3Dstdio%22%2C%22-e%22%2C%22RESOURCES_TO_TOOLS%3Dtrue%22%2C%22-e%22%2C%22HASS_URL%22%2C%22-e%22%2C%22HASS_ACCESS_TOKEN%22%2C%22ghcr.io%2Fslhad%2Faha-mcp%3Alatest%22%5D%2C%22env%22%3A%7B%22HASS_ACCESS_TOKEN%22%3A%22%24%7Binput%3AHASS_ACCESS_TOKEN%7D%22%2C%22HASS_URL%22%3A%22%24%7Binput%3AHASS_URL%7D%22%7D%7D)
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=aha-mcp&config=eyJjb21tYW5kIjoiZG9ja2VyIHJ1biAtLXB1bGwgYWx3YXlzIC1pIC0tcm0gLWUgVFJBTlNQT1JUPXN0ZGlvIC1lIFJFU09VUkNFU19UT19UT09MUz10cnVlIC1lIEhBU1NfVVJMPWh0dHBzOi8vaGFfaW5zdGFuY2UgLWUgSEFTU19BQ0NFU1NfVE9LRU49aGFfbG9uZ19saXZlZF9hY2Nlc3NfdG9rZW4gZ2hjci5pby9zbGhhZC9haGEtbWNwOmxhdGVzdCJ9)
 

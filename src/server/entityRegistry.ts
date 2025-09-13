@@ -123,7 +123,7 @@ export class EntityRegistry extends BaseMcp {
         this.server.registerTool(
             "create-config-entry-flow",
             {
-                title: "Create config entry flow with a handler",
+                title: "Create config entry flow with a handler helpers",
                 description: "Create a new config entry in the Home Assistant entity registry",
                 inputSchema: {
                     handler: z.string().describe("The handler for the config entry flow")
@@ -286,5 +286,31 @@ export class EntityRegistry extends BaseMcp {
                 }
             }
         );
+
+        this.registerResourceOrTool(
+            "list-config-entry-flows-helpers",
+            new ResourceTemplate("config_entry://flows_helpers", { list: undefined }),
+            {
+                title: "List helpers types",
+                description: "List available config entry flow handlers for helpers",
+                inputSchema: {},
+                mimeType: "application/json",
+                outputSchema: { flows: z.array(z.string()) }
+            },
+            async (uri: URL) => {
+                await this.ensureConnection();
+                const flows = await this.client!.getConfigEntriesFlowHandler();
+                return {
+                    contents: [
+                        {
+                            uri: uri.toString(),
+                            text: JSON.stringify({ flows }),
+                            mimeType: "application/json",
+                            _meta: {},
+                        }
+                    ]
+                };
+            }
+        )
     }
 }

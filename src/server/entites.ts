@@ -131,7 +131,7 @@ export class Entities extends BaseMcp {
                     itemId: z.string().describe("ID of the item, e.g. 'sensor.temperature' or 'area.living_room'")
                 },
                 mimeType: "application/json",
-                outputSchema: { entities: EntityStateSchema }
+                outputSchema: undefined
             },
             async (uri: URL, { itemType, itemId }) => {
                 await this.ensureConnection();

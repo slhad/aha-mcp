@@ -1,4 +1,4 @@
-import { McpServer, ResourceTemplate, ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { HASSClient } from "../hass/hassClient";
 import { ConfigMcpDef } from "../hass/types";
 import { ZodRawShape } from "zod";
@@ -26,6 +26,7 @@ export abstract class BaseMcp {
         return this.refClient.ref;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private transformResourceResultToTool(name: string, result: any, isStructuredContent = false) {
         if (this.options.DEBUG) {
             console.error(`Raw resource ${name}:`, JSON.stringify(result, undefined, 0));
@@ -35,6 +36,7 @@ export abstract class BaseMcp {
         if (noContent) {
             content.text = "No data found";
         } else if (result.contents.length > 1) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             content.text = `[${result.contents.map((c: any) => c.text).join(",")}]`;
         }
         content.type = "text";
@@ -62,6 +64,7 @@ export abstract class BaseMcp {
             inputSchema?: InputArgs;
             outputSchema?: OutputArgs;
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: (...args: any[]) => any
     ) {
         if (this.options.LIMIT_RESOURCES === 0) {
@@ -84,10 +87,12 @@ export abstract class BaseMcp {
                     inputSchema: options.inputSchema,
                     outputSchema: options.outputSchema
                 },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (async (args: any) => {
                     const firstArg = typeof templateOrUri === "string" ? undefined : new URL("http://dummy/" + name);
                     const result = await handler(firstArg, args);
                     return this.transformResourceResultToTool(name, result, !!options.outputSchema);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 }) as any
             );
         } else {

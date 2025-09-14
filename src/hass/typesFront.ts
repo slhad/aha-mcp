@@ -510,7 +510,7 @@ export const ApexChartsCardSchema = BaseCardSchema.extend({
 });
 
 // Grid card schema (nested grid)
-export const GridCardSchema: z.ZodType<any> = BaseCardSchema.extend({
+export const GridCardSchema: z.ZodType<unknown> = BaseCardSchema.extend({
     type: z.literal("grid"),
     square: z.boolean().optional(),
     columns: z.number().optional(),
@@ -518,7 +518,7 @@ export const GridCardSchema: z.ZodType<any> = BaseCardSchema.extend({
 });
 
 // Union of all card types
-export const LovelaceCardSchema: z.ZodType<any> = z.union([
+export const LovelaceCardSchema: z.ZodType<unknown> = z.union([
     HeadingCardSchema,
     MushroomLightCardSchema,
     TileCardSchema,

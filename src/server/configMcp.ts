@@ -48,7 +48,7 @@ export class ConfigMcp extends BaseMcp {
                 try {
                     const result = await this.client!.validateConfig(config);
                     return { content: [{ type: "text", text: JSON.stringify(result), _meta: {} }] };
-                    // @ts-ignore
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 } catch (err: any) {
                     if (this.options.DEBUG) {
                         console.error("Config validation error:", err);
@@ -56,7 +56,6 @@ export class ConfigMcp extends BaseMcp {
                     return {
                         content: [{
                             type: "text",
-                            // @ts-ignore
                             text: `Config validation failed: ${err.code} : ${err.message}`,
                             _meta: { error: true }
                         }]

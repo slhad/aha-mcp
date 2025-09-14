@@ -81,7 +81,7 @@ export class AutomationMcp extends BaseMcp {
                 outputSchema: { automations: z.array(AutomationSchema) }
             },
             async (_, { request }) => {
-                await this.ensureConnection(request);
+                await this.ensureConnection();
                 const automations = await this.client!.getAutomations();
                 return {
                     contents: [

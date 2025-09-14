@@ -1,17 +1,14 @@
-import { HomeAssistantMCPServer } from "./server/homeAssistantMcpServer.js";
-import { HASSConfig } from "./hass/types.js";
 import express, { Request, Response } from "express";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { randomUUID } from "node:crypto";
 import cors from "cors";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { Server } from "@modelcontextprotocol/sdk/server";
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8081;
 
 
-export async function startStreamableHttpServer(config: HASSConfig) {
+export async function startStreamableHttpServer(server: Server) {
     const app = express();
     app.use(cors({
         origin: '*',
@@ -37,7 +34,7 @@ export async function startStreamableHttpServer(config: HASSConfig) {
             transport.onclose = () => {
                 if (transport.sessionId) delete transports[transport.sessionId];
             };
-            await HomeAssistantMCPServer.getServer(transport.sessionId!, config).connect(transport);
+            await server.connect(transport);
         }
         await transport.handleRequest(req, res, req.body);
     });

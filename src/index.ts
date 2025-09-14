@@ -9,7 +9,7 @@ import { EntityRegistry } from "./server/entityRegistry";
 import { Entities } from "./server/entites";
 import { LovelaceMcp } from "./server/lovelaceMcp";
 import { HASSClient } from "./hass/hassClient";
-import { startSSEServer } from "./mcpTransports";
+import { startSSEServer, startStreamableHttpServer } from "./mcpTransports";
 
 export const configSchema = HASSConfigSchema;
 export default function createServer({
@@ -69,19 +69,19 @@ async function main() {
     const server = createServer({ config });
 
     switch (true) {
-        case process.argv.includes("http"): {
-            await startStreamableHttpServer(server);
-            break;
-        }
-        case process.argv.includes("sse"): {
-            await startSSEServer(server);
-            break;
-        }
-        default: {
-            const transport = new StdioServerTransport();
-            await server.connect(transport);
-            console.error("MCP Server running in stdio mode");
-        }
+    case process.argv.includes("http"): {
+        await startStreamableHttpServer(server);
+        break;
+    }
+    case process.argv.includes("sse"): {
+        await startSSEServer(server);
+        break;
+    }
+    default: {
+        const transport = new StdioServerTransport();
+        await server.connect(transport);
+        console.error("MCP Server running in stdio mode");
+    }
     }
 }
 

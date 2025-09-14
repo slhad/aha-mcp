@@ -14,8 +14,6 @@
         "start:stdio": "tsx .",
         "start:local:http": "tsx . -- http",
         "start:local:sse": "tsx . -- sse",
-        "prepublishOnly": "npm run build:stdio",
-        "oldStart": "tsx .",
         "docker": "docker build -t aha-mcp .",
         "podman": "podman build -t aha-mcp .",
         "predocker": "npm test",

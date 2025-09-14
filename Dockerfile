@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Set environment variables
-ENV NODE_ENV=production PORT=8081 TRANSPORT=streamablehttp RESOURCES_TO_TOOLS=true
+ENV NODE_ENV=production PORT=8081 RESOURCES_TO_TOOLS=true
 
 # Start the server
 CMD ["./node_modules/.bin/tsx", "."]

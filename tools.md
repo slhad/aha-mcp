@@ -2,7 +2,7 @@
 
 This document lists all available tools in the Home Assistant MCP Server.
 
-**Total Tools:** 38
+**Total Tools:** 39
 
 ## ⚠️ **IMPORTANT: Token Usage Warning**
 
@@ -45,16 +45,17 @@ This document lists all available tools in the Home Assistant MCP Server.
 | 157 | `get-device-id-by-entity-id` | Get device_id by entity_id | Get the device_id for a given entity_id | `entityId` (string): Entity ID, e.g. 'sensor.temperature' | None |
 | 146 | `get-config-entry-id-by-entity-id` | Get config_entry_id by entity_id | Get the config_entry_id for a given entity_id | `entityId` (string): Entity ID, e.g. 'sensor.temperature' | None |
 | 128 | `update-device-registry` | Update device registry | Update the device registry for a specific device_id | `device_id` (string): Device ID, e.g. 'device_123'<br>`device_config` (object): Any field device configuration to update | None |
-| 83 | `create-config-entry-flow` | Create config entry flow with a handler | Create a new config entry in the Home Assistant entity registry | `handler` (string): The handler for the config entry flow | None |
+| 84 | `create-config-entry-flow` | Create config entry flow with a handler helpers | Create a new config entry in the Home Assistant entity registry | `handler` (string): The handler for the config entry flow | None |
 | 108 | `continue-config-entry-flow` | Continue config entry flow | Continue an existing config entry flow with a next step Id | `flow_id` (string): The ID of the config entry flow to continue<br>`next_step_id` (string): The ID of the next step to execute | None |
 | 101 | `finish-config-entry-flow` | Finish config entry flow | Finish an existing config entry flow | `flow_id` (string): The ID of the config entry flow to finish<br>`options` (object): Parameters to finish the flow | None |
 | 96 | `create-config-entry-options-flow` | Create config entry options flow for a config entry id | Create a new config entry options flow for a specific config entry | `config_entry_id` (string): The ID of the config entry to create options flow for | None |
 | 104 | `update-config-entry-options-flow` | Update config entry options flow | Update an existing config entry options flow | `flow_id` (string): The ID of the config entry flow to update<br>`options` (object): Parameters to update the flow | None |
+| 107 | `list-config-entry-flows-helpers` | List helpers types | List available config entry flow handlers for helpers | None | None |
 | 240 | `list-entities-by-prefix` | List all entities by prefix | List all Home Assistant entities by prefix | `prefix` (string): Prefix to filter entities, e.g. 'sensor.' | None |
 | 269 | `list-entities-by-regex` | List all entities by regex | List all Home Assistant entities matching a regex pattern | `pattern` (string): Regex pattern for entity IDs, e.g. '^sensor\.'<br>`flags` (string): Regex flags, e.g. 'i' for ignore case | None |
 | 255 | `get-entity-state` | Get state of a specific entity | Get state of a specific entity_id | `entityId` (string): Entity ID, e.g. 'sensor.temperature' | None |
 | 125 | `get-entity-domain` | Get domain of a specific entity | Get domain of a specific entity_id | `entityId` (string): Entity ID, e.g. 'sensor.temperature' | None |
-| 302 | `search-related` | Search related entities | Search for entities related to a specific item_type (like 'area') and entity_id (like 'studio') | `itemType` (string): Type of the item, e.g. 'entity', 'area'<br>`itemId` (string): ID of the item, e.g. 'sensor.temperature' or 'area.living_room' | None |
+| 130 | `search-related` | Search related entities | Search for entities related to a specific item_type (like 'area') and entity_id (like 'studio') | `itemType` (string): Type of the item, e.g. 'entity', 'area'<br>`itemId` (string): ID of the item, e.g. 'sensor.temperature' or 'area.living_room' | None |
 | 32 | `list-area` | List all areas | List all Home Assistant areas | None | None |
 | 152 | `get-lovelace-config` | Get Lovelace Config | Fetch Lovelace dashboard config by url_path. The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-' | `url_path` (string): The URL path of the Lovelace dashboard config to fetch, e.g., 'default-view' or 'dashboard-id'. The URL must contain a dash ('-') and must not contain spaces or special characters, except '_' and '-' | `force` (boolean):  |
 | 4151 | `update-lovelace-config` | Update Lovelace Config | Update Lovelace dashboard config by url_path. | `url_path` (string): The URL path of the Lovelace dashboard config to update<br>`config` (object): The updated Lovelace dashboard config | None |
@@ -297,7 +298,7 @@ This document lists all available tools in the Home Assistant MCP Server.
 
 ---
 
-### Create config entry flow with a handler
+### Create config entry flow with a handler helpers
 
 **Name:** `create-config-entry-flow`
 
@@ -352,6 +353,14 @@ This document lists all available tools in the Home Assistant MCP Server.
 **Required Parameters:**
 - `flow_id` (string): The ID of the config entry flow to update
 - `options` (object): Parameters to update the flow
+
+---
+
+### List helpers types
+
+**Name:** `list-config-entry-flows-helpers`
+
+**Description:** List available config entry flow handlers for helpers
 
 ---
 

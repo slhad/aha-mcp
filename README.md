@@ -47,7 +47,7 @@ The server supports multiple transport methods:
     - [1. Run with STDIO Transport (Default)](#1-run-with-stdio-transport-default)
     - [2. Run with Server-Sent Events (SSE) Transport](#2-run-with-server-sent-events-sse-transport)
     - [3. Run with Streamable HTTP Transport](#3-run-with-streamable-http-transport)
-    - [4. Quick SSE Server Startup Script](#4-quick-sse-server-startup-script)
+    - [4. Quick SSE Server Startup](#4-quick-sse-server-startup)
     - [5. Run with Podman/Docker - STDIO Transport](#5-run-with-podmandocker---stdio-transport)
     - [6. Run with Podman/Docker - HTTP/SSE Server](#6-run-with-podmandocker---httpsse-server)
     - [Environment Variables](#environment-variables)
@@ -92,6 +92,7 @@ This MCP server provides **comprehensive tools** for interacting with Home Assis
 - **Service Calls**: Execute Home Assistant services
 - **Configuration**: Validate and manage Home Assistant configuration
 - **Registry Access**: Access entity and device registries
+- **Config Entry Flow Helpers**: Create and manage Home Assistant integration flows
 
 > **⚠️ TOKEN COST WARNING**
 >
@@ -108,9 +109,11 @@ npm run generate-docs
 ```
 
 This command will:
-1. Extract all available tools from the MCP server
+1. Extract all available tools from the MCP server using the inspector
 2. Generate a comprehensive markdown documentation file (`tools.md`)
 3. Clean up temporary files
+
+**Note:** The tools documentation shows the server currently provides **39 tools** for comprehensive Home Assistant integration.
 
 ## Project Structure
 - `src/` - Main source code
@@ -123,7 +126,6 @@ This command will:
 - `package.json` - Project dependencies and scripts
 - `tsconfig.json` - TypeScript configuration
 - `vitest.config.ts` - Vitest test runner configuration
-- `runSSEServer.sh` - Quick SSE server startup script
 
 
 
@@ -158,17 +160,17 @@ For SSE-based MCP communication, you need to run the server separately and then 
 
 **Step 1: Start the SSE server**
 ```bash
-# Start the server with SSE transport
-TRANSPORT=sse PORT=3000 HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> tsx src/index.ts
+# Start the server with SSE transport using npm script
+HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> npm run start:local:sse
 
-# Or use the provided script
-HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> ./runSSEServer.sh true sse
+# Or with additional configuration
+RESOURCES_TO_TOOLS=true DEBUG=true HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> npm run start:local:sse
 ```
 
 **Step 2: Configure MCP client to connect via URL**
 ```jsonc
 {
-  "url": "http://localhost:3000/sse",
+  "url": "http://localhost:8081/sse",
   "alwaysAllow": [
     // your allowed tools here
   ]
@@ -181,23 +183,23 @@ For HTTP-based MCP communication, you need to run the server separately and then
 
 **Step 1: Start the HTTP server**
 ```bash
-# Start the server with streamable HTTP transport
-TRANSPORT=streamablehttp PORT=3000 HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> tsx src/index.ts
+# Start the server with streamable HTTP transport using npm script
+HASS_URL=https://your-home-assistant.local:8123 HASS_ACCESS_TOKEN=<your_token_here> npm run start:local:http
 ```
 
 **Step 2: Configure MCP client to connect via URL**
 ```jsonc
 {
-  "url": "http://localhost:3000/mcp",
+  "url": "http://localhost:8081/mcp",
   "alwaysAllow": [
     // your allowed tools here
   ]
 }
 ```
 
-### 4. Quick SSE Server Startup Script
+### 4. Quick SSE Server Startup
 
-Use the provided shell script for quick SSE server startup:
+Start the SSE server directly with npm scripts:
 
 ```bash
 # Set your Home Assistant credentials first
@@ -205,7 +207,7 @@ export HASS_URL=https://your-home-assistant.local:8123
 export HASS_ACCESS_TOKEN=<your_token_here>
 
 # Start SSE server with RESOURCES_TO_TOOLS enabled
-./runSSEServer.sh true sse
+RESOURCES_TO_TOOLS=true DEBUG=true npm run start:local:sse
 ```
 
 Then configure your MCP client with:
@@ -228,8 +230,6 @@ For STDIO transport with containers:
     "-i",
     "--rm",
     "-e",
-    "TRANSPORT=stdio",
-    "-e",
     "HASS_URL=https://your-home-assistant.local:8123",
     "-e",
     "HASS_ACCESS_TOKEN=<your_token_here>",
@@ -245,10 +245,10 @@ For HTTP/SSE transports, run the server separately in a container:
 **Step 1: Start the server container**
 ```bash
 # For SSE transport
-podman run -p 3000:3000 -e TRANSPORT=sse -e PORT=3000 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> ghcr.io/slhad/aha-mcp
+podman run -p 8081:8081 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> ghcr.io/slhad/aha-mcp -- sse
 
 # For HTTP transport  
-podman run -p 3000:3000 -e TRANSPORT=streamablehttp -e PORT=3000 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> ghcr.io/slhad/aha-mcp
+podman run -p 8081:8081 -e HASS_URL=https://your-home-assistant.local:8123 -e HASS_ACCESS_TOKEN=<your_token_here> ghcr.io/slhad/aha-mcp -- http
 ```
 
 **Step 2: Configure MCP client**
@@ -266,18 +266,15 @@ Replace `<your_token_here>` with your actual Home Assistant access token.
 
 The following environment variables can be set to configure the MCP server:
 
-- `HASS_URL` (required): The URL of your Home Assistant instance. Example: `https://your-home-assistant.local:8123` (default in code: `ws://localhost:8123`)
+- `HASS_URL` (required): The URL of your Home Assistant instance. Example: `https://your-home-assistant.local:8123` (default in code: `http://localhost:8123`)
 - `HASS_ACCESS_TOKEN` (required): Long-lived access token for Home Assistant. The server will not start without this.
-- `TRANSPORT`: Transport method to use. Options: `stdio` (default), `sse`, `streamablehttp`. Default: `stdio`.
-  - `stdio`: Traditional MCP client communication via standard input/output
-  - `sse`: Server-Sent Events for web-based MCP communication
-  - `streamablehttp`: HTTP-based streamable MCP communication
-- `PORT`: Port number for HTTP/SSE server modes. Default: `3000`. Only used when `TRANSPORT` is `sse` or `streamablehttp`.
 - `DEBUG`: Set to `true` to enable debug logging. Default: `false`.
 - `RESOURCES_TO_TOOLS`: Set to `true` to enable mapping resources to tools. Default: `false`.
   - **Detailed explanation:**
     When enabled, this option exposes Home Assistant resources (such as entities, automations, and services) as individual tools for MCP clients. This is especially useful for clients or agents that can only interact with the server via tool-based interfaces, rather than through generic resource queries. It allows such clients to discover and use Home Assistant features as discrete, callable tools, improving compatibility and usability for tool-limited environments.
 - `LIMIT_RESOURCES`: Set to a number to limit the number of resources returned by the server. Default: unlimited.
+
+**Note:** The server transport method is now controlled by command line arguments (`sse` or `http`) rather than environment variables.
 
 ## Getting Started
 
@@ -300,14 +297,14 @@ npm start
 
 **For HTTP/SSE transports (run server separately):**
 ```sh
-# Run SSE server on port 3000
-TRANSPORT=sse PORT=3000 npm start
+# Run SSE server on port 8081
+npm run start:local:sse
 
-# Run HTTP server on port 8080  
-TRANSPORT=streamablehttp PORT=8080 npm start
+# Run HTTP server on port 8081:8081
+npm run start:local:http
 
-# Quick SSE server startup with script
-./runSSEServer.sh true sse
+# Quick SSE server startup with environment variables
+RESOURCES_TO_TOOLS=true DEBUG=true npm run start:local:sse
 ```
 
 Then configure your MCP client to connect via URL:

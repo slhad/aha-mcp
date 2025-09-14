@@ -5,6 +5,10 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { randomUUID } from "node:crypto";
 import cors from "cors";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { Server } from "@modelcontextprotocol/sdk/server";
+
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8081;
 
 
 export async function startStreamableHttpServer(config: HASSConfig) {
@@ -58,37 +62,31 @@ export async function startStreamableHttpServer(config: HASSConfig) {
         await transport.handleRequest(req, res);
     });
 
-    app.listen(config.port, () => {
-        console.log(`MCP Streamable HTTP Server listening on port ${config.port}`);
+    app.listen(PORT, () => {
+        console.log(`MCP Streamable HTTP Server listening on port ${PORT}`);
     });
 }
 
-export async function startSseServer(config: HASSConfig) {
+export async function startSSEServer(server: Server) {
     const app = express();
     app.use(express.json());
 
-    const transports: Record<string, SSEServerTransport> = {};
+    let transport: SSEServerTransport;
 
     app.get("/sse", async (req: Request, res: Response) => {
-        const transport = new SSEServerTransport("/messages", res);
-        transports[transport.sessionId] = transport;
-        res.on("close", () => {
-            delete transports[transport.sessionId];
-        });
-        await HomeAssistantMCPServer.getServer(transport.sessionId, config).connect(transport);
+        transport = new SSEServerTransport("/messages", res);
+        await server.connect(transport);
     });
 
     app.post("/messages", async (req: Request, res: Response) => {
-        const sessionId = req.query.sessionId as string | undefined;
-        const transport = sessionId ? transports[sessionId] : undefined;
         if (transport) {
             await transport.handlePostMessage(req, res, req.body);
         } else {
-            res.status(400).send("No transport found for sessionId");
+            res.status(400).send("No transport found");
         }
     });
 
-    app.listen(config.port, () => {
-        console.log(`MCP SSE Server listening on port ${config.port}`);
+    app.listen(PORT, () => {
+        console.log(`MCP SSE Server listening on port ${PORT}`);
     });
 }

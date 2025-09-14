@@ -1,18 +1,18 @@
 import { McpServer, ResourceTemplate, ToolCallback } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { HASSClient } from "../hass/hassClient";
 import { ConfigMcpDef } from "../hass/types";
-import { ZodObject, ZodRawShape } from "zod";
+import { ZodRawShape } from "zod";
 
 export abstract class BaseMcp {
     public server: McpServer;
-    public refClient: { ref: HASSClient, ensureConnection: (request: any) => Promise<void> };
+    public refClient: { ref: HASSClient, ensureConnection: () => Promise<void> };
     public options: ConfigMcpDef;
 
     abstract register(): void;
 
     constructor(
         server: McpServer,
-        refClient: { ref: HASSClient, ensureConnection: (request: any) => Promise<void> },
+        refClient: { ref: HASSClient, ensureConnection: () => Promise<void> },
         options: ConfigMcpDef
     ) {
         this.server = server;
@@ -20,7 +20,7 @@ export abstract class BaseMcp {
         this.options = options;
     }
 
-    ensureConnection = (request?: any) => this.refClient.ensureConnection(request);
+    ensureConnection = () => this.refClient.ensureConnection();
 
     get client() {
         return this.refClient.ref;

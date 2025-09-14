@@ -16,15 +16,15 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "SSE",
-            "runtimeExecutable": "tsx",
+            "name": "STDIO/npm",
+            "runtimeExecutable": "npm",
             "cwd": "${workspaceFolder}",
             "args": [
-                "src/index.ts"
+                "run",
+                "start:stdio"
             ],
             "env": {
                 "RESOURCES_TO_TOOLS": "true",
-                "TRANSPORT": "sse",
                 "DEBUG": "true",
                 "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
                 "HASS_URL": "${input:HASS_URL}"
@@ -33,7 +33,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Streamablehttp",
+            "name": "STDIO/native",
             "runtimeExecutable": "tsx",
             "cwd": "${workspaceFolder}",
             "args": [
@@ -41,11 +41,77 @@
             ],
             "env": {
                 "RESOURCES_TO_TOOLS": "true",
-                "TRANSPORT": "streamablehttp",
                 "DEBUG": "true",
                 "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
-                "HASS_URL": "${input:HASS_URL}",
-                "PORT": "8081"
+                "HASS_URL": "${input:HASS_URL}"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "SSE/npm",
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "run",
+                "start:local:sse"
+            ],
+            "env": {
+                "RESOURCES_TO_TOOLS": "true",
+                "DEBUG": "true",
+                "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
+                "HASS_URL": "${input:HASS_URL}"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "SSE/native",
+            "runtimeExecutable": "tsx",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                ".",
+                "sse"
+            ],
+            "env": {
+                "RESOURCES_TO_TOOLS": "true",
+                "DEBUG": "true",
+                "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
+                "HASS_URL": "${input:HASS_URL}"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "HTTP/npm",
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "run",
+                "start:local:http"
+            ],
+            "env": {
+                "RESOURCES_TO_TOOLS": "true",
+                "DEBUG": "true",
+                "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
+                "HASS_URL": "${input:HASS_URL}"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "HTTP/native",
+            "runtimeExecutable": "tsx",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                ".",
+                "http"
+            ],
+            "env": {
+                "RESOURCES_TO_TOOLS": "true",
+                "DEBUG": "true",
+                "HASS_ACCESS_TOKEN": "${input:HASS_ACCESS_TOKEN}",
+                "HASS_URL": "${input:HASS_URL}"
             }
         }
     ]

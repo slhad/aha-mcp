@@ -9,3 +9,4 @@ coverage/
 tests/hass-real-config.ts
 release_notes.md
 release_summary.md
+.smithery

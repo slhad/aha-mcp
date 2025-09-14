@@ -1,7 +1,6 @@
 # Architecture
 
-- **Main entry:** [`src/index.ts`](src/index.ts:1) — Instantiates and starts the MCP server.
-- **MCP server:** [`src/server/homeAssistantMcpServer.ts`](src/server/homeAssistantMcpServer.ts:1) — Orchestrates all MCP modules, manages Home Assistant connection, and registers all tools.
+- **Main entry:** [`src/index.ts`](src/index.ts:1) — Main MCP server implementation that orchestrates all MCP modules, manages Home Assistant connection, registers all tools, and handles transport selection.
 - **MCP modules (tools):**
   - [`src/server/automationMcp.ts`](src/server/automationMcp.ts:1) — Automation CRUD, trace, device triggers.
   - [`src/server/configMcp.ts`](src/server/configMcp.ts:1) — Home Assistant configuration tools.
@@ -41,13 +40,15 @@
 
 ```mermaid
 flowchart TD
-    A[Entry: src/index.ts] --> B[HomeAssistantMCPServer: src/server/homeAssistantMcpServer.ts]
+    A[Entry: src/index.ts] --> B[MCP Server Creation & Module Registration]
     B -->|Registers| C[AutomationMcp: src/server/automationMcp.ts]
     B -->|Registers| D[ConfigMcp: src/server/configMcp.ts]
     B -->|Registers| E[EntityRegistry: src/server/entityRegistry.ts]
     B -->|Registers| F[Entities: src/server/entites.ts]
     B -->|Registers| G[LovelaceMcp: src/server/lovelaceMcp.ts]
     B -->|Uses| H[HASSClient: src/hass/hassClient.ts]
-    H -->|WebSocket/REST| I[Home Assistant]
-    C & D & E & F & G -->|MCP Tools| J[MCP Protocol Client]
+    A -->|Transport Selection| I[Transport Layer: src/mcpTransports.ts]
+    I -->|stdio/sse/streamablehttp| J[MCP Protocol Client]
+    H -->|WebSocket/REST| K[Home Assistant]
+    C & D & E & F & G -->|MCP Tools| J
 ```

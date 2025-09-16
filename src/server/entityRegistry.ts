@@ -63,10 +63,10 @@ export class EntityRegistry extends BaseMcp {
             new ResourceTemplate("config_entry://by-entity-id/{entityId}", { list: undefined }),
             {
                 title: "Get config_entry_id by entity_id",
-                description: "Get the config_entry_id for a given entity_id",
+                description: "Get the config_entry_id for a given entity_id, useful for templated sensors and other config entry flows alike",
                 inputSchema: { entityId: z.string().describe("Entity ID, e.g. 'sensor.temperature'") },
                 mimeType: "application/json",
-                outputSchema: { config_entry_id: z.string().describe("Config entry ID for the entity") }
+                outputSchema: { configEntryId: z.string().describe("Config entry ID for the entity") }
             },
             async (uri: URL, { entityId }) => {
                 await this.ensureConnection();
@@ -124,7 +124,7 @@ export class EntityRegistry extends BaseMcp {
             "create-config-entry-flow",
             {
                 title: "Create config entry flow with a handler helpers",
-                description: "Create a new config entry in the Home Assistant entity registry",
+                description: "Create a new config entry in the Home Assistant entity registry for a new config entry (new templated helpers for ex)",
                 inputSchema: {
                     handler: z.string().describe("The handler for the config entry flow")
                 },
@@ -224,7 +224,7 @@ export class EntityRegistry extends BaseMcp {
             "create-config-entry-options-flow",
             {
                 title: "Create config entry options flow for a config entry id",
-                description: "Create a new config entry options flow for a specific config entry",
+                description: "Create a new config entry options flow for a specific config entry (already existing config entry, templated helpers for ex)",
                 inputSchema: {
                     config_entry_id: z.string().describe("The ID of the config entry to create options flow for"),
                 }

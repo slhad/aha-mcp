@@ -85,7 +85,10 @@ export abstract class BaseMcp {
                     title: options.title,
                     description: options.description,
                     inputSchema: options.inputSchema,
-                    outputSchema: options.outputSchema
+                    outputSchema: options.outputSchema,
+                    annotations: {
+                        readOnlyHint: true
+                    }
                 },
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (async (args: any) => {

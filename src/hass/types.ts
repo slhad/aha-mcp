@@ -44,7 +44,7 @@ export const EntityStateSchemaPrime = z.object({
         userId: z.string().optional(),
         parentId: z.string().optional(),
     }),
-});
+}).passthrough();
 export const EntityStateArraySchema = z.array(EntityStateSchemaPrime);
 export const EntityStateSchema = EntityStateSchemaPrime.describe("Home Assistant entity state object with entity ID, state value, attributes, and context information");
 export type EntityState = z.infer<typeof EntityStateSchema>;

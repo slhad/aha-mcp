@@ -13,20 +13,18 @@ export class Entities extends BaseMcp {
                 description: "List all Home Assistant entities by prefix",
                 inputSchema: { prefix: z.string().describe("Prefix to filter entities, e.g. 'sensor.'") },
                 mimeType: "application/json",
-                outputSchema: { entities: EntityStateArraySchema }
+                outputSchema: undefined // { entities: EntityStateArraySchema }
             },
             async (uri: URL, { prefix }) => {
                 await this.ensureConnection();
                 const entities = await this.client!.getEntitiesByPrefix(prefix as string);
                 return {
-                    contents: [
-                        {
-                            uri: uri.toString(),
-                            text: JSON.stringify({ entities }),
-                            mimeType: "application/json",
-                            _meta: {},
-                        }
-                    ]
+                    contents: entities.map(entity => ({
+                        uri: uri.toString(),
+                        text: JSON.stringify({ entity }),
+                        mimeType: "application/json",
+                        _meta: {},
+                    }))
                 };
             }
         );
@@ -42,7 +40,7 @@ export class Entities extends BaseMcp {
                     flags: z.string().describe("Regex flags, e.g. 'i' for ignore case")
                 },
                 mimeType: "application/json",
-                outputSchema: { entities: EntityStateArraySchema }
+                outputSchema: undefined // { entities: EntityStateArraySchema }
             },
             async (uri: URL, { pattern, flags }) => {
                 await this.ensureConnection();
@@ -54,14 +52,12 @@ export class Entities extends BaseMcp {
                 }
                 const entities = await this.client!.getEntities(regex);
                 return {
-                    contents: [
-                        {
-                            uri: uri.toString(),
-                            text: JSON.stringify({ entities }),
-                            mimeType: "application/json",
-                            _meta: {},
-                        }
-                    ]
+                    contents: entities.map(entity => ({
+                        uri: uri.toString(),
+                        text: JSON.stringify({ entity }),
+                        mimeType: "application/json",
+                        _meta: {},
+                    }))
                 };
             }
         );

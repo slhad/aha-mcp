@@ -31,7 +31,7 @@ export abstract class BaseMcp {
         if (this.options.DEBUG) {
             console.error(`Raw resource ${name}:`, JSON.stringify(result, undefined, 0));
         }
-        const content = result.contents[0];
+        const content = result.contents[0] || {};
         const noContent = !content.text;
         if (noContent) {
             content.text = "No data found";
@@ -43,7 +43,7 @@ export abstract class BaseMcp {
         delete content.uri;
         delete content.mimeType;
         const final = isStructuredContent ? {
-            structuredContent: JSON.parse(content.text),
+            structuredContent: typeof content.text === "string" ? JSON.parse(content.text) : content.text,
             content: [content]
         } : {
             content: [content]

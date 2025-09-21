@@ -13,7 +13,8 @@ const RestApi = {
     ConfigEntriesFlowOptions: "config/config_entries/options/flow",
     ConfigEntriesFlow: "config/config_entries/flow",
     ConfigEntriesFlowHandler: "config/config_entries/flow_handlers?type=helper",
-    ConfigEntry: (id: string) => `config/config_entries/entry/${id}`
+    ConfigEntry: (id: string) => `config/config_entries/entry/${id}`,
+    Script: (id: string) => `config/script/config/${id}`
 };
 
 export class HASSClient {
@@ -505,6 +506,33 @@ export class HASSClient {
             type: "search/related",
             item_type,
             item_id
+        });
+    }
+
+    async listScripts(): Promise<EntityState[]> {
+        const states = await this.getStates();
+        return states.filter((state) => state.entityId.startsWith("script."));
+    }
+
+    async getScriptRest(alias: string): Promise<unknown> {
+        return this.sendApiCall({
+            api: RestApi.Script(alias),
+            method: "GET"
+        }) as Promise<Record<string, unknown>>;
+    }
+
+    async updateScriptRest(alias: string, scriptConfig: Record<string, unknown>): Promise<void> {
+        await this.sendApiCall({
+            api: RestApi.Script(alias),
+            method: "POST",
+            message: scriptConfig
+        });
+    }
+
+    async deleteScriptRest(alias: string): Promise<void> {
+        await this.sendApiCall({
+            api: RestApi.Script(alias),
+            method: "DELETE"
         });
     }
 

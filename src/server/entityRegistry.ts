@@ -312,5 +312,142 @@ export class EntityRegistry extends BaseMcp {
                 };
             }
         )
+
+        this.registerResourceOrTool(
+            "list-scripts",
+            "script://all",
+            {
+                title: "List all scripts",
+                description: "List all scripts in Home Assistant, friendly_name = alias",
+                inputSchema: {},
+                mimeType: "application/json",
+                outputSchema: { scripts: z.array(z.record(z.string(), z.unknown())) }
+            },
+            async () => {
+                await this.ensureConnection();
+                const scripts = await this.client!.listScripts();
+                return {
+                    contents: [
+                        {
+                            uri: "script://all",
+                            text: JSON.stringify({ scripts }),
+                            mimeType: "application/json",
+                            _meta: {},
+                        }
+                    ]
+                };
+            }
+        )
+
+        this.registerResourceOrTool(
+            "get-rest-script-by-entity-id",
+            new ResourceTemplate("script://by-entity-id/{entityId}", { list: undefined }),
+            {
+                title: "Get a script by entity_id",
+                description: "Get the details of a specific script by its entity_id",
+                inputSchema: { entityId: z.string().describe("Entity ID of the script, e.g. 'my_script'") },
+                mimeType: "application/json",
+                outputSchema: { script: z.record(z.string(), z.unknown()) }
+            },
+            async (uri: URL, { entityId }) => {
+                await this.ensureConnection();
+                const scriptEntity = await this.client!.getEntitiesByPrefix(`script.${entityId.replace("script.", "")}`);
+                const script = scriptEntity.length > 0 ? await this.client!.getScriptRest(scriptEntity[0].attributes["friendly_name"] as string) : null;
+                return {
+                    contents: [
+                        {
+                            uri: uri.toString(),
+                            text: JSON.stringify({ script }),
+                            mimeType: "application/json",
+                            _meta: {},
+                        }
+                    ]
+                };
+            }
+        );
+
+        this.registerResourceOrTool(
+            "get-rest-script-by-alias",
+            new ResourceTemplate("script://{alias}", { list: undefined }),
+            {
+                title: "Get a script by alias",
+                description: "Get the details of a specific script by its alias, not script.entity_id",
+                inputSchema: { alias: z.string().describe("Alias of the script, e.g. 'My Script' not 'script.script_entity_id'") },
+                mimeType: "application/json",
+                outputSchema: { script: z.record(z.string(), z.unknown()) }
+            },
+            async (uri: URL, { alias }) => {
+                await this.ensureConnection();
+                const script = await this.client!.getScriptRest(alias as string);
+                return {
+                    contents: [
+                        {
+                            uri: uri.toString(),
+                            text: JSON.stringify({ script }),
+                            mimeType: "application/json",
+                            _meta: {},
+                        }
+                    ]
+                };
+            }
+        );
+
+        this.server.registerTool(
+            "update-rest-script-by-alias",
+            {
+                title: "Update a script by alias",
+                description: "Update the details of a specific script by its alias",
+                inputSchema: {
+                    alias: z.string().describe("alias of the script, e.g. 'My Script'"),
+                    data: z.object({}).describe("The script configuration data to update"),
+                },
+                outputSchema: { success: z.boolean() }
+            },
+            async ({ alias, data }) => {
+                await this.ensureConnection();
+                const success = await this.client!.updateScriptRest(alias as string, data);
+                return {
+                    content: [{
+                        type: "text",
+                        text: `Script updated: ${alias}`,
+                        _meta: {}
+                    }]
+                };
+            }
+        );
+
+        this.server.registerTool(
+            "delete-rest-script-by-alias",
+            {
+                title: "Delete a script by alias",
+                description: "Delete a specific script by its alias",
+                inputSchema: {
+                    alias: z.string().describe("Alias of the script, e.g. 'My Script'"),
+                },
+                outputSchema: { success: z.boolean() }
+            },
+            async ({ alias }) => {
+                await this.ensureConnection();
+                try {
+                    await this.client!.deleteScriptRest(alias as string);
+                    return {
+                        content: [{
+                            type: "text",
+                            text: `Script deleted: ${alias}`,
+                            _meta: {}
+                        }]
+                    };
+                } catch (error: unknown) {
+                    return {
+                        isError: true,
+                        content: [{
+                            type: "text",
+                            text: `Failed to delete script ${alias}: ${error instanceof Error ? error.message : "Unknown error"}`,
+                            _meta: { error: true }
+                        }]
+                    };
+                }
+            }
+        );
     }
 }

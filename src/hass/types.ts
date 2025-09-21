@@ -22,9 +22,9 @@ export type EntityRegistryArray = z.infer<typeof EntityRegistryArrayType>;
 export const HASSConfigSchema = z.object({
     url: z.string(),
     accessToken: z.string(),
-    debugMode: z.boolean().optional().default(false).describe("Enable debug mode for verbose logging"),
-    RESOURCES_TO_TOOLS: z.boolean().optional().default(true).describe("Enable resource to tool conversion"),
-    LIMIT_RESOURCES: z.number().optional().describe("Limit the number of resources to convert, -1 for no limit").default(-1)
+    debugMode: z.boolean().optional().default(false).describe("Enable debug mode for verbose logging").nullish(),
+    RESOURCES_TO_TOOLS: z.boolean().optional().default(true).describe("Enable resource to tool conversion").nullish(),
+    LIMIT_RESOURCES: z.number().optional().describe("Limit the number of resources to convert, -1 for no limit").default(-1).nullish()
 });
 export type HASSConfig = z.infer<typeof HASSConfigSchema>;
 export type ConfigMcpDef = {

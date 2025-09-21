@@ -521,7 +521,7 @@ export class HASSClient {
         }) as Promise<Record<string, unknown>>;
     }
 
-    async updateScriptRest(alias: string, scriptConfig: Record<string, unknown>): Promise<void> {
+    async upsertScriptRest(alias: string, scriptConfig: Record<string, unknown>): Promise<void> {
         await this.sendApiCall({
             api: RestApi.Script(alias),
             method: "POST",

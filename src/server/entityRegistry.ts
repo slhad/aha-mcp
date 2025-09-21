@@ -393,19 +393,19 @@ export class EntityRegistry extends BaseMcp {
         );
 
         this.server.registerTool(
-            "update-rest-script-by-alias",
+            "upsertScriptRest-rest-script-by-alias",
             {
-                title: "Update a script by alias",
-                description: "Update the details of a specific script by its alias",
+                title: "Create or Update a script by alias",
+                description: "Create or Update the details of a specific script by its alias",
                 inputSchema: {
                     alias: z.string().describe("alias of the script, e.g. 'My Script'"),
-                    data: z.object({}).describe("The script configuration data to update"),
+                    data: z.object({}).describe("The script configuration data to create/update"),
                 },
                 outputSchema: { success: z.boolean() }
             },
             async ({ alias, data }) => {
                 await this.ensureConnection();
-                const success = await this.client!.updateScriptRest(alias as string, data);
+                const success = await this.client!.upsertScriptRest(alias as string, data);
                 return {
                     content: [{
                         type: "text",

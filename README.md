@@ -8,7 +8,9 @@
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=aha-mcp&config=eyJjb21tYW5kIjoiZG9ja2VyIHJ1biAtLXB1bGwgYWx3YXlzIC1pIC0tcm0gLWUgVFJBTlNQT1JUPXN0ZGlvIC1lIFJFU09VUkNFU19UT19UT09MUz10cnVlIC1lIEhBU1NfVVJMPWh0dHBzOi8vaGFfaW5zdGFuY2UgLWUgSEFTU19BQ0NFU1NfVE9LRU49aGFfbG9uZ19saXZlZF9hY2Nlc3NfdG9rZW4gZ2hjci5pby9zbGhhZC9haGEtbWNwOmxhdGVzdCJ9)
 
 **Others**  
-[![smithery badge](https://smithery.ai/badge/@slhad/aha-mcp)](https://smithery.ai/server/@slhad/aha-mcp)\
+[![smithery badge](https://smithery.ai/badge/@slhad/aha-mcp)](https://smithery.ai/server/@slhad/aha-mcp)
+
+Pretty useful to test it without IDE
 
 ## AHA stands for Another Home Assistant MCP Server
 
